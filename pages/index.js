@@ -77,6 +77,10 @@ export default function Home({ data }) {
             <h2 className="font-weight-bold text-light">
               Hololive Youtube Subscriber Count
             </h2>
+            <p className="text-secondary">
+              All the data used in this chart are from the member's Youtube main
+              account.
+            </p>
           </Col>
         </Row>
       </Container>
