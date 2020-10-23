@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { Container, Row, Col } from "react-bootstrap";
+import YoutubeSubscriberHorizontalBar from "../components/YoutubeSubscriberHorizontalBar.js";
 
 const YOUTUBE_CHANNELS_API =
   "https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet";
@@ -76,6 +77,13 @@ export default function Home({ data }) {
             <h2 className="font-weight-bold text-light">
               Hololive Youtube Subscriber Count
             </h2>
+          </Col>
+        </Row>
+      </Container>
+      <Container>
+        <Row>
+          <Col>
+            <YoutubeSubscriberHorizontalBar />
           </Col>
         </Row>
       </Container>
