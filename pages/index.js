@@ -1,36 +1,22 @@
 import Head from 'next/head'
-import styles from '../styles/Home.module.css'
+import { Container, Row, Col, Button } from 'react-bootstrap';
 
 export default function Home() {
   return (
-    <div className={styles.container}>
+    <div>
       <Head>
         <title>Hololive Youtube Subscriber Count</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Hololive Youtube Subscriber Count
-        </h1>
-
-        <p className={styles.description}>
-
-        </p>
-
-        <div>
-        </div>
-      </main>
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-        </a>
+      <Container className="my-5">
+        <Row className="justify-content-center">
+          <Col xs="auto" md="auto">
+            <h2 className="text-light">Hololive Youtube Subscriber Count</h2>
+          </Col>
+        </Row>
+      </Container>
+      <p className="text-light">asd</p>
+      <footer>
       </footer>
     </div>
   )
