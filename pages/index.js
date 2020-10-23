@@ -59,11 +59,6 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ data }) {
-  console.log("data", data);
-  // console.log("data", data.items[0].snippet.title);
-  // console.log("data", data.items[0].statistics.subscriberCount);
-  // console.log("data", data.items[0].snippet.thumbnails.default);
-
   for (var item of data.items) {
     console.log(item.snippet.title);
     console.log(item.statistics.subscriberCount);
