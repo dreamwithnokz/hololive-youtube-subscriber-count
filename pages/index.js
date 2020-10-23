@@ -1,7 +1,26 @@
-import Head from 'next/head'
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import Head from "next/head";
+import { Container, Row, Col } from "react-bootstrap";
 
-export default function Home() {
+const YOUTUBE_SUBSCRIPTIONS_API =
+  "https://www.googleapis.com/youtube/v3/channels";
+
+export async function getServerSideProps() {
+  const res = await fetch(
+    `${YOUTUBE_SUBSCRIPTIONS_API}?part=statistics&part=snippet&id=UCl_gCybOJRIgOXw6Qb4qJzQ&key=${process.env.YOUTUBE_API_KEY}`
+  );
+  const data = await res.json();
+  return {
+    props: {
+      data,
+    },
+  };
+}
+
+export default function Home({ data }) {
+  console.log("data", data);
+
+  console.log("data", data.items[0].snippet.title);
+  console.log("data", data.items[0].statistics.subscriberCount);
   return (
     <div>
       <Head>
@@ -15,9 +34,9 @@ export default function Home() {
           </Col>
         </Row>
       </Container>
-      <p className="text-light">asd</p>
-      <footer>
-      </footer>
+      <p className="text-light">{data.items[0].snippet.title}</p>
+      <p className="text-light">{data.items[0].statistics.subscriberCount}</p>
+      <footer></footer>
     </div>
-  )
+  );
 }
