@@ -9,5 +9,5 @@ and as a hobby.
 
 ## Usage
 
-Visit <will add link here> for the deployed web app of this project.
+Visit https://hololive-youtube-subscriber-count.vercel.app/ for the deployed web app of this project.
 
