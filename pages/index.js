@@ -60,7 +60,6 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ data }) {
-    // console.log(item.snippet.thumbnails);
   return (
     <div>
       <Head>

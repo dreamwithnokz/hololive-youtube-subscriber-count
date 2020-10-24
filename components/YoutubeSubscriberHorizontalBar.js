@@ -21,19 +21,34 @@ const options = {
   },
 };
 
-function addData(items) {
+function addItemsToData(items) {
   for (var item of items) {
-    data.labels.push(item.snippet.title);
-    data.datasets[0].data.push(item.statistics.subscriberCount);
+    data.labels.push(item.channelName);
+    data.datasets[0].data.push(item.subscriberCount);
   }
+}
+
+function sortItemsAscending(items) {
+  var arrItems = [];
+  for (var item of items) {
+    arrItems.push({
+      'channelName': item.snippet.title,
+      'subscriberCount': item.statistics.subscriberCount,
+      'avatarUrl': item.snippet.thumbnails,
+    });
+  }
+  arrItems.sort(function(a, b) {
+    return a.subscriberCount - b.subscriberCount;
+  }).reverse();
+  return arrItems;
 }
 
 export default class YoutubeSubscriberHorizontalBar extends React.Component {
   render() {
-    addData(this.props.items);
+    addItemsToData(sortItemsAscending(this.props.items));
     return (
       <div>
-        <HorizontalBar data={data} options={options} width={400} height={700} />
+        <HorizontalBar data={data} options={options} width={400} height={500} />
       </div>
     );
   }
