@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col, Card } from "react-bootstrap";
 import YoutubeSubscriberHorizontalBar from "../components/YoutubeSubscriberHorizontalBar.js";
 
 const YOUTUBE_CHANNELS_API =
@@ -82,11 +82,19 @@ export default function Home({ data }) {
       <Container className="mb-5">
         <Row>
           <Col>
-            <YoutubeSubscriberHorizontalBar items={data.items}/>
+            <YoutubeSubscriberHorizontalBar items={data.items} />
           </Col>
         </Row>
       </Container>
-      <footer></footer>
+      <Card className="text-center bg-dark">
+        <Card.Footer className="text-muted">
+          The developer is not affiliated with Hololive Production.
+          <br />
+          This has only been develop as a hobby.
+          <br />
+          <a href="https://www.dreamwithnokz.dev" target="_blank">dreamwithnokz.dev</a>
+        </Card.Footer>
+      </Card>
     </div>
   );
 }
