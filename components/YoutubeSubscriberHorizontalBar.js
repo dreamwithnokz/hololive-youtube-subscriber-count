@@ -2,21 +2,10 @@ import React from "react";
 import { HorizontalBar } from "react-chartjs-2";
 
 const data = {
-  labels: [
-    "as",
-    "asd",
-    "asdd",
-    "asd",
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-  ],
+  labels: [],
   datasets: [
     {
-      data: [14, 20, 30, 65, 59, 80, 81, 56, 55, 40],
+      data: [],
       label: "Subscribers",
       backgroundColor: "rgba(244,105,105,0.5)",
       hoverBackgroundColor: "rgba(255,0,54,0.4)",
@@ -32,11 +21,19 @@ const options = {
   },
 };
 
+function addData(items) {
+  for (var item of items) {
+    data.labels.push(item.snippet.title);
+    data.datasets[0].data.push(item.statistics.subscriberCount);
+  }
+}
+
 export default class YoutubeSubscriberHorizontalBar extends React.Component {
   render() {
+    addData(this.props.items);
     return (
       <div>
-        <HorizontalBar data={data} options={options} width={400} height={300} />
+        <HorizontalBar data={data} options={options} width={400} height={700} />
       </div>
     );
   }

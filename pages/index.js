@@ -60,11 +60,7 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ data }) {
-  for (var item of data.items) {
-    console.log(item.snippet.title);
-    console.log(item.statistics.subscriberCount);
-    console.log(item.snippet.thumbnails);
-  }
+    // console.log(item.snippet.thumbnails);
   return (
     <div>
       <Head>
@@ -84,10 +80,10 @@ export default function Home({ data }) {
           </Col>
         </Row>
       </Container>
-      <Container>
+      <Container className="mb-5">
         <Row>
           <Col>
-            <YoutubeSubscriberHorizontalBar />
+            <YoutubeSubscriberHorizontalBar items={data.items}/>
           </Col>
         </Row>
       </Container>
