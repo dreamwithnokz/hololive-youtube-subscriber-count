@@ -90,8 +90,6 @@ export default function Home({ data }) {
         <Card.Footer className="text-muted">
           The developer is not affiliated with Hololive Production.
           <br />
-          This has only been develop as a hobby.
-          <br />
           <a href="https://www.dreamwithnokz.dev" target="_blank">dreamwithnokz.dev</a>
         </Card.Footer>
       </Card>
