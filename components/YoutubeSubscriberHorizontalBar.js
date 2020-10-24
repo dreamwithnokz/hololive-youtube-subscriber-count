@@ -86,6 +86,9 @@ function sortItemsAscending(items) {
 export default class YoutubeSubscriberHorizontalBar extends React.Component {
   handleElementsClick(e) {
     // view item's YouTube channel on new tab
+    if (e.length == 0) {
+      return;
+    }
     let channelId = e[1]._model.channelId;
     window.open(`https://youtube.com/channel/${channelId}`, '_blank');
   }
