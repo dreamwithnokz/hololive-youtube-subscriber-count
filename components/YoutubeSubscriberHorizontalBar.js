@@ -34,6 +34,12 @@ const options = {
       },
     },
   },
+  hover: {
+    onHover: function (e, data) {
+      // show hand cursor when pointer hits data on chart
+      document.getElementById('chart').style.cursor = data[0] ? 'pointer' : 'default';
+    }
+  },
   maintainAspectRatio: false,
 };
 
@@ -53,6 +59,7 @@ function addItemsToData(items) {
         var img = new Image(40, 40);
         img.src = item.avatarUrl.default.url;
         chart.getDatasetMeta(1).data[i]._model.pointStyle = img;
+        chart.getDatasetMeta(0).data[i]._model.channelId = item.channelId;
       },
     });
   });
@@ -62,6 +69,7 @@ function sortItemsAscending(items) {
   var arrItems = [];
   for (var item of items) {
     arrItems.push({
+      channelId: item.id,
       channelName: item.snippet.title,
       subscriberCount: item.statistics.subscriberCount,
       avatarUrl: item.snippet.thumbnails,
@@ -76,15 +84,23 @@ function sortItemsAscending(items) {
 }
 
 export default class YoutubeSubscriberHorizontalBar extends React.Component {
+  handleElementsClick(e) {
+    // view item's YouTube channel on new tab
+    let channelId = e[1]._model.channelId;
+    window.open(`https://youtube.com/channel/${channelId}`, '_blank');
+  }
+
   render() {
     addItemsToData(sortItemsAscending(this.props.items));
     return (
       <div>
         <HorizontalBar
+          id="chart"
           data={data}
           options={options}
           width={400}
           height={2200}
+          onElementsClick={this.handleElementsClick}
         />
       </div>
     );
