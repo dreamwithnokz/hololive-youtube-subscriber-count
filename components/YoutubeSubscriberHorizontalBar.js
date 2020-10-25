@@ -1,6 +1,5 @@
 import React from "react";
-import Chart from "chart.js";
-import { HorizontalBar } from "react-chartjs-2";
+import { Chart, HorizontalBar } from "react-chartjs-2";
 import {createIntl, createIntlCache} from 'react-intl';
 
 const intl = createIntl({ locale: 'en', defaultLocale: 'en', }, createIntlCache());
@@ -57,6 +56,9 @@ const options = {
     mode: 'single',
     displayColors: false,
     callbacks: {
+      title: function (tooltipItems) {
+        return (tooltipItems.length == 0) ? '' : tooltipItems[0].yLabel;
+      },
       label: function (tooltipItems) {
         const subcriberCountText = intl.formatNumber(tooltipItems.xLabel, { notation: "compact", compactDisplay: "short" });
         return ` ${subcriberCountText} Subscribers`;
@@ -68,9 +70,6 @@ const options = {
 
 function addItemsToData(items) {
   items.forEach(function (item, i) {
-    Chart.pluginService.register({
-      afterUpdate: function (chart) {},
-    });
     data.labels.push(item.channelName);
     data.datasets[0].data.push(item.subscriberCount);
     data.datasets[1].data.push({
