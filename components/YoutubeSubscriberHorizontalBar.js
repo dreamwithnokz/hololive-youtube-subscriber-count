@@ -1,6 +1,9 @@
 import React from "react";
 import Chart from "chart.js";
 import { HorizontalBar } from "react-chartjs-2";
+import {createIntl, createIntlCache} from 'react-intl';
+
+const intl = createIntl({ locale: 'en', defaultLocale: 'en', }, createIntlCache());
 
 const data = {
   labels: [],
@@ -38,6 +41,26 @@ const options = {
     onHover: function (e, data) {
       // show hand cursor when pointer hits data on chart
       document.getElementById('chart').style.cursor = data[0] ? 'pointer' : 'default';
+    }
+  },
+  scales: {
+    xAxes: [{
+      ticks: {
+        callback: function (value) {
+          return intl.formatNumber(value, { notation: "compact", compactDisplay: "short" });
+        },
+      },
+    }]
+  },
+  tooltips: {
+    enabled: true,
+    mode: 'single',
+    displayColors: false,
+    callbacks: {
+      label: function (tooltipItems) {
+        const subcriberCountText = intl.formatNumber(tooltipItems.xLabel, { notation: "compact", compactDisplay: "short" });
+        return ` ${subcriberCountText} Subscribers`;
+      },
     }
   },
   maintainAspectRatio: false,
