@@ -9,4 +9,4 @@ Visit https://hololive-youtube-subscriber-count.vercel.app/ to use the app.
 ## Disclaimer
 
 This hobby project has no affiliation with Hololive production in any way and has been built only
-for fun and as a hobby.
+for fun.
