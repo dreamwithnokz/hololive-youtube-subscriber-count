@@ -63,18 +63,17 @@ export default function Home({ data }) {
   return (
     <div>
       <Head>
-        <title>Hololive Youtube Subscriber Count</title>
+        <title>Hololive YouTube Subscriber Count</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container className="my-5">
         <Row className="justify-content-center">
           <Col xs="auto" md="auto">
             <h2 className="font-weight-bold text-light">
-              Hololive Youtube Subscriber Count
+              Hololive YouTube Subscriber Count
             </h2>
-            <p className="text-secondary">
-              All the data used in this chart are from the member's Youtube main
-              account.
+            <p className="text-secondary text-center">
+              All data are fetched from the members' official YouTube channel.
             </p>
           </Col>
         </Row>
