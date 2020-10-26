@@ -64,12 +64,12 @@ export default function Home({ data }) {
     <div>
       <Head>
         <title>Hololive YouTube Subscriber Count</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" />
       </Head>
       <Container className="my-5">
         <Row className="justify-content-center">
           <Col xs="auto" md="auto">
-            <h2 className="font-weight-bold text-light">
+            <h2 className="font-weight-bold text-light text-center">
               Hololive YouTube Subscriber Count
             </h2>
             <p className="text-secondary text-center">
