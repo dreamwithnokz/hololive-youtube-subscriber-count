@@ -1,25 +1,12 @@
 import React from "react";
 import { Chart, HorizontalBar } from "react-chartjs-2";
-import {createIntl, createIntlCache} from 'react-intl';
+import { createIntl, createIntlCache } from 'react-intl';
 
 const intl = createIntl({ locale: 'en', defaultLocale: 'en', }, createIntlCache());
 
 const THUMBNAIL_SIZE = 38.5;
 
-const data = {
-  labels: [],
-  datasets: [
-    {
-      data: [],
-      label: "Subscribers",
-      backgroundColor: "rgba(244,105,105,0.5)",
-      hoverBackgroundColor: "rgba(255,0,54,0.4)",
-      hoverBorderColor: "rgb(0,88,101)",
-    }
-  ],
-};
-
-const options = {
+const CHART_OPTIONS = {
   legend: {
     position: "bottom",
     onClick: (e) => e.stopPropagation(),
@@ -60,44 +47,6 @@ const options = {
   },
   maintainAspectRatio: false,
 };
-
-function addItemsToData(items) {
-  items.forEach(function (item, i) {
-    data.labels.push(item.channelName);
-    data.datasets[0].data.push(item.subscriberCount);
-    Chart.pluginService.register({
-      afterUpdate: function (chart) {
-        var img = new Image(THUMBNAIL_SIZE);
-        img.src = item.avatarUrl.default.url;
-        img.onerror = function () {
-          this.src = 'holo-logo.png';
-        };
-        img.onload = function () {
-          chart.getDatasetMeta(0).data[i]._model.thumbnailImage = img;
-        };
-        chart.getDatasetMeta(0).data[i]._model.channelId = item.channelId;
-      },
-    });
-  });
-}
-
-function sortItemsAscending(items) {
-  var arrItems = [];
-  for (var item of items) {
-    arrItems.push({
-      channelId: item.id,
-      channelName: item.snippet.title,
-      subscriberCount: item.statistics.subscriberCount,
-      avatarUrl: item.snippet.thumbnails,
-    });
-  }
-  arrItems
-    .sort(function (a, b) {
-      return a.subscriberCount - b.subscriberCount;
-    })
-    .reverse();
-  return arrItems;
-}
 
 function isVertical(vm) {
   return vm && vm.width !== undefined;
@@ -199,7 +148,7 @@ function boundingRects(vm) {
 Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
   draw () {
     const { ctx } = this._chart;
-    const img = this._chart.getDatasetMeta(0).data[this._index]._model.thumbnailImage;
+    const img = this._chart.data.images[this._index];
 
     var vm = this._view;
     var { outer, inner } = boundingRects(vm);
@@ -207,9 +156,10 @@ Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
     ctx.fillStyle = vm.backgroundColor;
     ctx.fillRect(outer.x, outer.y, outer.w, outer.h);
 
-    // extension: draw thumbnail image
-    if (img) {
-      ctx.drawImage(img, outer.x + outer.w - (THUMBNAIL_SIZE / 2), outer.y, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
+    // extend: draw image
+    if (img.width > 0 && img.height > 0) {
+      const x0 = this._chart.chartArea.left;
+      ctx.drawImage(img, Math.max(x0, outer.x + outer.w - THUMBNAIL_SIZE), outer.y, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
     }
 
     if (outer.w === inner.w && outer.h === inner.h) {
@@ -228,27 +178,82 @@ Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
 });
 
 export default class YoutubeSubscriberHorizontalBar extends React.Component {
-  handleElementsClick(e) {
+
+  constructor (props) {
+    super(props);
+    this.state = {
+      data: {}
+    };
+  }
+
+  addItemsToData (items) {
+    const data = {
+      labels: [],
+      datasets: [{
+        data: [],
+        images: [],
+        channelIds: [],
+        label: "Subscribers",
+        backgroundColor: "rgba(244,105,105,0.5)",
+        hoverBackgroundColor: "rgba(255,0,54,0.4)",
+        hoverBorderColor: "rgb(0,88,101)",
+      }],
+    };
+
+    items.forEach(function (item, i) {
+      data.labels.push(item.channelName);
+      data.datasets[0].data.push(item.subscriberCount);
+      data.datasets[0].channelIds.push(item.channelId);
+
+      // load avatar images
+      var img = new Image();
+      img.src = item.avatarUrl.default.url;
+      data.datasets[0].images.push(img);
+    });
+
+    // inject the images and channelIds on the chart instance because it cannot be in the dataset
+    Chart.pluginService.register({
+      beforeDatasetUpdate: function (chart) {
+        chart.data.images = data.datasets[0].images;
+        chart.data.channelIds = data.datasets[0].channelIds;
+      },
+    });
+
+    this.setState({ data: data });
+  }
+
+  sortItemsAscending (items) {
+    return items.map(item => ({
+      channelId: item.id,
+      channelName: item.snippet.title,
+      subscriberCount: item.statistics.subscriberCount,
+      avatarUrl: item.snippet.thumbnails,
+    })).sort((a, b) => a.subscriberCount - b.subscriberCount).reverse();
+  }
+
+  handleElementsClick (e, f) {
     // view item's YouTube channel on new tab
     if (e.length == 0) {
       return;
     }
-    let channelId = e[0]._model.channelId;
+    const channelId = e[0]._chart.data.channelIds[e[0]._index];
     window.open(`https://youtube.com/channel/${channelId}`, '_blank');
   }
 
+  componentDidMount () {
+    this.addItemsToData(this.sortItemsAscending(this.props.items));
+  }
+
   render() {
-    addItemsToData(sortItemsAscending(this.props.items));
     return (
       <div>
         <HorizontalBar
           id="chart"
-          data={data}
-          options={options}
+          data={this.state.data}
+          options={CHART_OPTIONS}
           width={400}
           height={2200}
-          onElementsClick={this.handleElementsClick}
-        />
+          onElementsClick={this.handleElementsClick}/>
       </div>
     );
   }
