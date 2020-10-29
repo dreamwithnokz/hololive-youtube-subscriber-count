@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "bootstrap": "^4.5.3",
+    "canvas": "^2.6.1",
     "chart.js": "^2.9.4",
+    "color-thief-node": "^1.0.3",
     "next": "9.5.5",
     "react": "17.0.1",
     "react-bootstrap": "^1.4.0",
