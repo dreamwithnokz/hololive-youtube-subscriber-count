@@ -1,4 +1,5 @@
 import React from "react";
+import ReactLoading from 'react-loading';
 import { Chart, HorizontalBar } from "react-chartjs-2";
 import { createIntl, createIntlCache } from 'react-intl';
 
@@ -182,7 +183,7 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      data: {}
+      data: {},
     };
   }
 
@@ -219,7 +220,8 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
       },
     });
 
-    this.setState({ data: data });
+    // add some short delay before pushing into the chart so images can have some time to load
+    setTimeout(() => this.setState({ data: data }), 1024);
   }
 
   sortItemsAscending (items) {
@@ -245,15 +247,20 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
   }
 
   render() {
+    const { data } = this.state;
     return (
-      <div>
-        <HorizontalBar
-          id="chart"
-          data={this.state.data}
-          options={CHART_OPTIONS}
-          width={400}
-          height={2200}
-          onElementsClick={this.handleElementsClick}/>
+      <div className="d-flex justify-content-center">
+        { (Object.keys(data).length == 0) ?
+          <ReactLoading className="mt-5" type="spinningBubbles" color="#864041" />
+          :
+          <HorizontalBar
+            id="chart"
+            data={data}
+            options={CHART_OPTIONS}
+            width={400}
+            height={2200}
+            onElementsClick={this.handleElementsClick} />
+        }
       </div>
     );
   }

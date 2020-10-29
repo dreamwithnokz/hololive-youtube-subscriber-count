@@ -3,6 +3,7 @@ body {
   background-color: #18191A !important;
   padding: 0;
   margin: 0;
+  height: 100%;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
@@ -14,4 +15,19 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+#__next {
+  position: relative;
+  min-height: 100%;
+}
+
+.content {
+  padding-bottom: 7em;
+}
+
+.footer {
+  position: absolute !important;
+  bottom: 0;
+  width: 100%
 }

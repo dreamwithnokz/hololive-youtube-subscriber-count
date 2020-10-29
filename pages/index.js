@@ -1,6 +1,6 @@
 import Head from "next/head";
 import { Container, Row, Col, Card } from "react-bootstrap";
-import YoutubeSubscriberHorizontalBar from "../components/YoutubeSubscriberHorizontalBar.js";
+import YoutubeSubscriberBarChart from "../components/YoutubeSubscriberBarChart.js";
 
 const YOUTUBE_CHANNELS_API =
   "https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet";
@@ -66,10 +66,10 @@ export default function Home({ data }) {
         <title>Hololive YouTube Subscriber Count</title>
         <link rel="icon" href="/favicon.png" />
       </Head>
-      <Container className="my-5">
+      <Container className="content">
         <Row className="justify-content-center">
           <Col xs="auto" md="auto">
-            <h2 className="font-weight-bold text-light text-center">
+            <h2 className="mt-5 font-weight-bold text-light text-center">
               Hololive YouTube Subscriber Count
             </h2>
             <p className="text-secondary text-center">
@@ -77,15 +77,13 @@ export default function Home({ data }) {
             </p>
           </Col>
         </Row>
-      </Container>
-      <Container className="mb-5">
         <Row>
           <Col>
-            <YoutubeSubscriberHorizontalBar items={data.items} />
+            <YoutubeSubscriberBarChart items={data.items} />
           </Col>
         </Row>
       </Container>
-      <Card className="text-center bg-dark">
+      <Card className="footer text-center bg-dark">
         <Card.Footer className="text-muted">
           The developer is not affiliated with Hololive Production.
           <br />
