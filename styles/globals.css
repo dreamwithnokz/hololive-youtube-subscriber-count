@@ -28,6 +28,14 @@ a {
 
 .footer {
   position: absolute !important;
+  background-color: #0d0c0c;
+  width: 100%;
+  padding: 1.25em 0;
   bottom: 0;
-  width: 100%
+  border-top: 1px solid #681212;
+  color: #939393;
+}
+
+.footer a, .footer a:hover {
+  color: #f01f1f;
 }

@@ -83,13 +83,11 @@ export default function Home({ data }) {
           </Col>
         </Row>
       </Container>
-      <Card className="footer text-center bg-dark">
-        <Card.Footer className="text-muted">
-          The developer is not affiliated with Hololive Production.
-          <br />
-          <a href="https://www.dreamwithnokz.dev" target="_blank">dreamwithnokz.dev</a>
-        </Card.Footer>
-      </Card>
+      <div className="footer text-center">
+        The developer is not affiliated with Hololive Production.
+        <br />
+        <a href="https://www.dreamwithnokz.dev" target="_blank">dreamwithnokz.dev</a>
+      </div>
     </div>
   );
 }
