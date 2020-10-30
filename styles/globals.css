@@ -3,6 +3,7 @@ body {
   background-color: #18191A !important;
   padding: 0;
   margin: 0;
+  height: 100%;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 }
@@ -14,4 +15,27 @@ a {
 
 * {
   box-sizing: border-box;
+}
+
+#__next {
+  position: relative;
+  min-height: 100%;
+}
+
+.content {
+  padding-bottom: 8em;
+}
+
+.footer {
+  position: absolute !important;
+  background-color: #0d0c0c;
+  width: 100%;
+  padding: 1.25em 0;
+  bottom: 0;
+  border-top: 1px solid #681212;
+  color: #939393;
+}
+
+.footer a, .footer a:hover {
+  color: #f01f1f;
 }

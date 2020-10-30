@@ -5,16 +5,20 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "vercel-build": "yum install libuuid-devel libmount-devel && cp /lib64/{libuuid,libmount,libblkid}.so.1 node_modules/canvas/build/Release/ && npm run build"
   },
   "dependencies": {
     "bootstrap": "^4.5.3",
+    "canvas": "^2.6.1",
     "chart.js": "^2.9.4",
+    "color-thief-node": "^1.0.3",
     "next": "9.5.5",
     "react": "17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-chartjs-2": "^2.10.0",
     "react-dom": "17.0.1",
-    "react-intl": "^5.8.6"
+    "react-intl": "^5.8.6",
+    "react-loading": "^2.0.3"
   }
 }

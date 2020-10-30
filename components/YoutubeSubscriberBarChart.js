@@ -1,20 +1,18 @@
 import React from "react";
+import ReactLoading from 'react-loading';
 import { Chart, HorizontalBar } from "react-chartjs-2";
 import { createIntl, createIntlCache } from 'react-intl';
+const { getColor } = require('color-thief-node');
 
 const intl = createIntl({ locale: 'en', defaultLocale: 'en', }, createIntlCache());
 
 const THUMBNAIL_SIZE = 38.5;
 
+const GRIDLINE_COLOR = '#262424';
+
 const CHART_OPTIONS = {
   legend: {
-    position: "bottom",
-    onClick: (e) => e.stopPropagation(),
-    labels: {
-      filter: function (item, chart) {
-        return !item.text.includes("Name");
-      },
-    },
+    display: false
   },
   hover: {
     onHover: function (e, data) {
@@ -23,7 +21,15 @@ const CHART_OPTIONS = {
     }
   },
   scales: {
+    yAxes: [{
+      gridLines: {
+        color: GRIDLINE_COLOR
+      },
+    }],
     xAxes: [{
+      gridLines: {
+        color: GRIDLINE_COLOR
+      },
       ticks: {
         callback: function (value) {
           return intl.formatNumber(value, { notation: "compact", compactDisplay: "short" });
@@ -145,15 +151,21 @@ function boundingRects(vm) {
   };
 }
 
+const rgbToHex = (color) => '#' + color.map(x => {
+  const hex = x.toString(16);
+  return hex.length === 1 ? '0' + hex : hex;
+}).join('');
+
 Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
   draw () {
     const { ctx } = this._chart;
     const img = this._chart.data.images[this._index];
+    const barColor = this._chart.data.barColors[this._index];
 
     var vm = this._view;
     var { outer, inner } = boundingRects(vm);
 
-    ctx.fillStyle = vm.backgroundColor;
+    ctx.fillStyle = barColor;
     ctx.fillRect(outer.x, outer.y, outer.w, outer.h);
 
     // extend: draw image
@@ -182,23 +194,27 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
-      data: {}
+      data: {},
     };
   }
 
-  addItemsToData (items) {
+  fetchData (items) {
+    const component = this;
     const data = {
       labels: [],
       datasets: [{
         data: [],
         images: [],
         channelIds: [],
+        barColors: [],
         label: "Subscribers",
         backgroundColor: "rgba(244,105,105,0.5)",
         hoverBackgroundColor: "rgba(255,0,54,0.4)",
         hoverBorderColor: "rgb(0,88,101)",
       }],
     };
+
+    let loadingImageCount = 0;
 
     items.forEach(function (item, i) {
       data.labels.push(item.channelName);
@@ -208,14 +224,38 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
       // load avatar images
       var img = new Image();
       img.src = item.avatarUrl.default.url;
+      img.crossOrigin = "anonymous";
+      loadingImageCount++;
+
+      // when image fails to load, decrement image loading counter
+      img.onerror = function () {
+        loadingImageCount--;
+        if (loadingImageCount == 0) {
+          component.loadData(data);
+        }
+      };
+
+      // when image is loaded, decrement loading counter and get dominant color
+      img.onload = function () {
+        let color = getColor(this, 16);
+        data.datasets[0].barColors[i] = rgbToHex(color);
+        loadingImageCount--;
+        if (loadingImageCount == 0) {
+          component.loadData(data);
+        }
+      };
+
       data.datasets[0].images.push(img);
     });
+  }
 
+  loadData (data) {
     // inject the images and channelIds on the chart instance because it cannot be in the dataset
     Chart.pluginService.register({
       beforeDatasetUpdate: function (chart) {
         chart.data.images = data.datasets[0].images;
         chart.data.channelIds = data.datasets[0].channelIds;
+        chart.data.barColors = data.datasets[0].barColors;
       },
     });
 
@@ -241,19 +281,28 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
   }
 
   componentDidMount () {
-    this.addItemsToData(this.sortItemsAscending(this.props.items));
+    // for some reason, calling fetchData directly blocks/delays the ReactLoading rendering
+    // call fetchData asynchronously
+    setTimeout(() => {
+      this.fetchData(this.sortItemsAscending(this.props.items));
+    }, 0);
   }
 
   render() {
+    const { data } = this.state;
     return (
-      <div>
-        <HorizontalBar
-          id="chart"
-          data={this.state.data}
-          options={CHART_OPTIONS}
-          width={400}
-          height={2200}
-          onElementsClick={this.handleElementsClick}/>
+      <div className="d-flex justify-content-center">
+        { (Object.keys(data).length <= 0) ?
+          <ReactLoading className="mt-5" type="bubbles" color="#f01f1f" delay={0}/>
+          :
+          <HorizontalBar
+            id="chart"
+            data={data}
+            options={CHART_OPTIONS}
+            width={400}
+            height={2200}
+            onElementsClick={this.handleElementsClick} />
+        }
       </div>
     );
   }
