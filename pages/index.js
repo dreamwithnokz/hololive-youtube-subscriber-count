@@ -1,9 +1,9 @@
 import Head from "next/head";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import YoutubeSubscriberBarChart from "../components/YoutubeSubscriberBarChart.js";
+import SortDropdown from "../components/SortDropdown.js";
 
-const YOUTUBE_CHANNELS_API =
-  "https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet";
+const YOUTUBE_CHANNELS_API = "https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet";
 const YOUTUBE_CHANNEL_IDS = [
   "UCp6993wxpyDPHUpavwDFqgg",
   "UCDqI2jOz0weumE8s7paEk6g",
@@ -76,6 +76,9 @@ export default function Home({ data }) {
               All data are fetched from the members' official YouTube channel.
             </p>
           </Col>
+        </Row>
+        <Row className="justify-content-end">
+          <SortDropdown/>
         </Row>
         <Row>
           <Col>
