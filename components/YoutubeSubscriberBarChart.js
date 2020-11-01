@@ -2,7 +2,6 @@ import React from "react";
 import ReactLoading from 'react-loading';
 import { Chart, HorizontalBar } from "react-chartjs-2";
 import { createIntl, createIntlCache } from 'react-intl';
-const { getColor } = require('color-thief-node');
 
 const intl = createIntl({ locale: 'en', defaultLocale: 'en', }, createIntlCache());
 
@@ -151,11 +150,6 @@ function boundingRects(vm) {
   };
 }
 
-const rgbToHex = (color) => '#' + color.map(x => {
-  const hex = x.toString(16);
-  return hex.length === 1 ? '0' + hex : hex;
-}).join('');
-
 Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
   draw () {
     const { ctx } = this._chart;
@@ -190,17 +184,8 @@ Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
 });
 
 export default class YoutubeSubscriberHorizontalBar extends React.Component {
-
-  constructor (props) {
-    super(props);
-    this.state = {
-      data: {},
-    };
-  }
-
-  fetchData (items) {
-    const component = this;
-    const data = {
+  loadDataToChart (data) {
+    const chartData = {
       labels: [],
       datasets: [{
         data: [],
@@ -214,61 +199,24 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
       }],
     };
 
-    let loadingImageCount = 0;
-
-    items.forEach(function (item, i) {
-      data.labels.push(item.channelName);
-      data.datasets[0].data.push(item.subscriberCount);
-      data.datasets[0].channelIds.push(item.channelId);
-
-      // load avatar images
-      var img = new Image();
-      img.src = item.avatarUrl.default.url;
-      img.crossOrigin = "anonymous";
-      loadingImageCount++;
-
-      // when image fails to load, decrement image loading counter
-      img.onerror = function () {
-        loadingImageCount--;
-        if (loadingImageCount == 0) {
-          component.loadData(data);
-        }
-      };
-
-      // when image is loaded, decrement loading counter and get dominant color
-      img.onload = function () {
-        let color = getColor(this, 16);
-        data.datasets[0].barColors[i] = rgbToHex(color);
-        loadingImageCount--;
-        if (loadingImageCount == 0) {
-          component.loadData(data);
-        }
-      };
-
-      data.datasets[0].images.push(img);
+    data.forEach(function (item, i) {
+      chartData.labels.push(item.channelName);
+      chartData.datasets[0].data.push(item.subscriberCount);
+      chartData.datasets[0].channelIds.push(item.channelId);
+      chartData.datasets[0].barColors[i] = item.color;
+      chartData.datasets[0].images.push(item.channelImage);
     });
-  }
 
-  loadData (data) {
     // inject the images and channelIds on the chart instance because it cannot be in the dataset
     Chart.pluginService.register({
       beforeDatasetUpdate: function (chart) {
-        chart.data.images = data.datasets[0].images;
-        chart.data.channelIds = data.datasets[0].channelIds;
-        chart.data.barColors = data.datasets[0].barColors;
+        chart.data.images = chartData.datasets[0].images;
+        chart.data.channelIds = chartData.datasets[0].channelIds;
+        chart.data.barColors = chartData.datasets[0].barColors;
       },
     });
 
-    this.setState({ data: data });
-  }
-
-  sortItemsAscending (items) {
-    return items.map(item => ({
-      channelId: item.id,
-      channelName: item.snippet.title,
-      subscriberCount: item.statistics.subscriberCount,
-      avatarUrl: item.snippet.thumbnails,
-    })).sort((a, b) => a.subscriberCount - b.subscriberCount).reverse();
+    return chartData;
   }
 
   handleElementsClick (e, f) {
@@ -280,16 +228,8 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
     window.open(`https://youtube.com/channel/${channelId}`, '_blank');
   }
 
-  componentDidMount () {
-    // for some reason, calling fetchData directly blocks/delays the ReactLoading rendering
-    // call fetchData asynchronously
-    setTimeout(() => {
-      this.fetchData(this.sortItemsAscending(this.props.items));
-    }, 0);
-  }
-
   render() {
-    const { data } = this.state;
+    const { data } = this.props;
     return (
       <div className="d-flex justify-content-center">
         { (Object.keys(data).length <= 0) ?
@@ -297,7 +237,7 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
           :
           <HorizontalBar
             id="chart"
-            data={data}
+            data={this.loadDataToChart(data)}
             options={CHART_OPTIONS}
             width={400}
             height={2200}

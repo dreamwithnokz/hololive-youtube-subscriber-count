@@ -1,7 +1,10 @@
+import React from "react";
 import Head from "next/head";
 import { Container, Row, Col } from "react-bootstrap";
 import YoutubeSubscriberBarChart from "../components/YoutubeSubscriberBarChart.js";
 import SortDropdown from "../components/SortDropdown.js";
+import { rgbToHex } from '../utils/app-utils';
+const { getColor } = require('color-thief-node');
 
 const YOUTUBE_CHANNELS_API = "https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet";
 const YOUTUBE_CHANNEL_IDS = [
@@ -59,38 +62,120 @@ export async function getServerSideProps() {
   };
 }
 
-export default function Home({ data }) {
-  return (
-    <div>
-      <Head>
-        <title>Hololive YouTube Subscriber Count</title>
-        <link rel="icon" href="/favicon.png" />
-      </Head>
-      <Container className="content">
-        <Row className="justify-content-center">
-          <Col xs="auto" md="auto">
-            <h2 className="mt-5 font-weight-bold text-light text-center">
-              Hololive YouTube Subscriber Count
+export default class Index extends React.Component {
+  constructor (props) {
+    super(props);
+    this.state = {
+      sort: 'SUBSCRIBERS_DESC',
+      data: []
+    }
+  }
+
+  initializeData (items) {
+    const component = this;
+    const channelData = items.map(item => ({
+      avatarUrl: item.snippet.thumbnails,
+      channelId: item.id,
+      channelImage: null,
+      channelName: item.snippet.title,
+      color: '#dc3545',
+      subscriberCount: item.statistics.subscriberCount,
+    }));
+
+    let loadingImageCount = 0;
+
+    channelData.forEach(item => {
+      // load avatar images
+      var img = new Image();
+      img.src = item.avatarUrl.default.url;
+      img.crossOrigin = "anonymous";
+      loadingImageCount++;
+
+      // when image fails to load, decrement image loading counter
+      img.onerror = function () {
+        loadingImageCount--;
+        if (loadingImageCount == 0) {
+          component.handleDataInitialize(channelData);
+        }
+      };
+
+      // when image is loaded, decrement loading counter and get dominant color
+      img.onload = function () {
+        let color = getColor(this, 16);
+        item.color = rgbToHex(color);
+        loadingImageCount--;
+        if (loadingImageCount == 0) {
+          component.handleDataInitialize(channelData);
+        }
+      };
+
+      item.channelImage = img;
+    })
+  }
+
+  sortData (data) {
+    const { sort } = this.state;
+    const sortedData = [...data].sort((a, b) => a.subscriberCount - b.subscriberCount);
+
+    if (sort == 'SUBSCRIBERS_DESC') {
+      sortedData.reverse();
+    }
+
+    return sortedData;
+  }
+
+  handleDataInitialize (data) {
+    this.setState({ data: this.sortData(data) });
+  }
+  
+
+  handleSortChange (sortKey) {
+    this.setState({ sort: sortKey }, () => {
+      this.setState({ data: this.sortData(this.state.data) });
+    });
+  }
+
+  componentDidMount () {
+    // call async to not block rendering of loading component
+    setTimeout(() => {
+      this.initializeData(this.props.data.items);
+    }, 0);
+  }
+
+  render () {
+    const { data } = this.state;
+    return (
+      <div>
+        <Head>
+          <title>Hololive YouTube Subscriber Count</title>
+          <link rel="icon" href="/favicon.png" />
+        </Head>
+        <Container className="content">
+          <Row className="justify-content-center">
+            <Col xs="auto" md="auto">
+              <h2 className="mt-5 font-weight-bold text-light text-center">
+                Hololive YouTube Subscriber Count
             </h2>
-            <p className="text-secondary text-center">
-              All data are fetched from the members' official YouTube channel.
+              <p className="text-secondary text-center">
+                All data are fetched from the members' official YouTube channel.
             </p>
-          </Col>
-        </Row>
-        <Row className="justify-content-end">
-          <SortDropdown/>
-        </Row>
-        <Row>
-          <Col>
-            <YoutubeSubscriberBarChart items={data.items} />
-          </Col>
-        </Row>
-      </Container>
-      <div className="footer text-center">
-        The developer is not affiliated with Hololive Production.
+            </Col>
+          </Row>
+          <Row className="justify-content-end">
+            <SortDropdown onSortChange={this.handleSortChange.bind(this)}/>
+          </Row>
+          <Row>
+            <Col>
+              <YoutubeSubscriberBarChart sort={this.state.sort} data={data}/>
+            </Col>
+          </Row>
+        </Container>
+        <div className="footer text-center">
+          The developer is not affiliated with Hololive Production.
         <br />
-        <a href="https://www.dreamwithnokz.dev" target="_blank">dreamwithnokz.dev</a>
+          <a href="https://www.dreamwithnokz.dev" target="_blank">dreamwithnokz.dev</a>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

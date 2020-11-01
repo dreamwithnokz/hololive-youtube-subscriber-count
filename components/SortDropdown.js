@@ -2,9 +2,22 @@ import React from 'react'
 import { Form } from 'react-bootstrap'
 import styles from '../styles/FilterDropdown.module.scss'
 
+const sortOptions = {
+  'SUBSCRIBERS_DESC': 'Most subscribers',
+  'SUBSCRIBERS_ASC': 'Least subscribers',
+}
+
 export default class YoutubeSubscriberHorizontalBar extends React.Component {
-  handleSelect () {
-    // todo: handle selection event here
+  handleSortChange (e) {
+    if (typeof this.props.onSortChange != 'undefined') {
+      this.props.onSortChange(e.target.value)
+    }
+  }
+
+  renderSortOptions () {
+    return Object.keys(sortOptions).map(key => {
+      return <option key={key} value={key}>{sortOptions[key]}</option>
+    })
   }
 
   render() {
@@ -15,11 +28,11 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
         </Form.Label>
         <Form.Control
           as="select"
-          className={[styles.sortSelection, "my-1", "mr-sm-2"]}
           id="sortPref"
+          className={[styles.sortSelection, "my-1", "mr-sm-2"]}
+          onChange={this.handleSortChange.bind(this)}
           custom>
-          <option>Most subscribers</option>
-          <option>Least subscribers</option>
+            {this.renderSortOptions()}
         </Form.Control>
       </Form>
     )
