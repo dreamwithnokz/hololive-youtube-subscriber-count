@@ -3,6 +3,7 @@ import Head from "next/head";
 import { Container, Row, Col } from "react-bootstrap";
 import YoutubeSubscriberBarChart from "../components/YoutubeSubscriberBarChart.js";
 import SortDropdown from "../components/SortDropdown.js";
+import FilterControl from "../components/FilterControl.js";
 import { rgbToHex } from '../utils/app-utils';
 const { getColor } = require('color-thief-node');
 
@@ -164,6 +165,11 @@ export default class Index extends React.Component {
           <Row>
             <Col>
               <SortDropdown onSortChange={this.handleSortChange.bind(this)} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <FilterControl collapse={false} />
             </Col>
           </Row>
           <Row>
