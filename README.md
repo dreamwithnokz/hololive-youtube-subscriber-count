@@ -4,7 +4,7 @@ A simple web app that shows a graph for the number of subscribers of each of the
 
 ## Usage
 
-Visit https://hololive-youtube-subscriber-count.vercel.app/ to use the app.
+Visit https://hysc.vercel.app/ to use the app.
 
 ## Disclaimer
 
