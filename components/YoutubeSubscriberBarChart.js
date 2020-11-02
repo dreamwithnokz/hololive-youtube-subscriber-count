@@ -1,12 +1,15 @@
 import React from "react";
-import ReactLoading from 'react-loading';
 import { Chart, HorizontalBar } from "react-chartjs-2";
 import { createIntl, createIntlCache } from 'react-intl';
 import { boundingRects } from '../utils/app-utils';
 
-const intl = createIntl({ locale: 'en', defaultLocale: 'en', }, createIntlCache());
+const intl = createIntl({ locale: 'en', defaultLocale: 'en' }, createIntlCache());
 
 const THUMBNAIL_SIZE = 38.5;
+
+const ROW_HEIGHT = 53.5;
+
+const X_AXIS_HEIGHT = 38;
 
 const GRIDLINE_COLOR = '#262424';
 
@@ -31,6 +34,7 @@ const CHART_OPTIONS = {
         color: GRIDLINE_COLOR
       },
       ticks: {
+        beginAtZero: true,
         callback: function (value) {
           return intl.formatNumber(value, { notation: "compact", compactDisplay: "short" });
         },
@@ -88,6 +92,14 @@ Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
 });
 
 export default class YoutubeSubscriberHorizontalBar extends React.Component {
+  getDisplayedDataHeight () {
+    return this.getDisplayedDataCount() * ROW_HEIGHT + X_AXIS_HEIGHT;
+  }
+
+  getDisplayedDataCount () {
+    return this.props.data.filter(e => e.display).length;
+  }
+
   loadDataToChart (data) {
     const chartData = {
       labels: [],
@@ -103,12 +115,17 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
       }],
     };
 
+    let displayedIndex = 0;
     data.forEach(function (item, i) {
+      if (!item.display) {
+        return;
+      }
       chartData.labels.push(item.channelName);
       chartData.datasets[0].data.push(item.subscriberCount);
       chartData.datasets[0].channelIds.push(item.channelId);
-      chartData.datasets[0].barColors[i] = item.color;
+      chartData.datasets[0].barColors[displayedIndex] = item.color;
       chartData.datasets[0].images.push(item.channelImage);
+      displayedIndex++;
     });
 
     // inject the images and channelIds on the chart instance because it cannot be in the dataset
@@ -133,21 +150,11 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
   }
 
   render() {
-    const { data } = this.props;
     return (
-      <div className="d-flex justify-content-center">
-        { (Object.keys(data).length <= 0) ?
-          <ReactLoading className="mt-5" type="bubbles" color="#f01f1f" delay={0}/>
-          :
-          <HorizontalBar
-            id="chart"
-            data={this.loadDataToChart(data)}
-            options={CHART_OPTIONS}
-            width={400}
-            height={2200}
-            onElementsClick={this.handleElementsClick} />
-        }
-      </div>
+      (this.getDisplayedDataCount() > 0) ?
+        <div className="w-100" style={{ height: Math.max(this.getDisplayedDataHeight(), 50) }}>
+          <HorizontalBar id="chart" data={this.loadDataToChart(this.props.data)} options={CHART_OPTIONS} onElementsClick={this.handleElementsClick} />
+        </div> : null
     );
   }
 }

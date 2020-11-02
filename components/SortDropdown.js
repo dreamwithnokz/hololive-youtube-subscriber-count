@@ -8,7 +8,7 @@ const sortOptions = {
 }
 
 export default class YoutubeSubscriberHorizontalBar extends React.Component {
-  handleSortChange (e) {
+  handleSortChange = (e) => {
     if (typeof this.props.onSortChange != 'undefined') {
       this.props.onSortChange(e.target.value)
     }
@@ -26,12 +26,7 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
         <Form.Label className={[styles.label, "my-1", "mr-2"]} htmlFor="sortPref">
           Sort by 
         </Form.Label>
-        <Form.Control
-          as="select"
-          id="sortPref"
-          className={[styles.sortSelection, "my-1"]}
-          onChange={this.handleSortChange.bind(this)}
-          custom>
+        <Form.Control as="select" id="sortPref" className={[styles.sortSelection, "my-1"]} onChange={this.handleSortChange} custom>
             {this.renderSortOptions()}
         </Form.Control>
       </Form>

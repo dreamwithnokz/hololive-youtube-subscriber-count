@@ -4,56 +4,58 @@ import { Container, Row, Col } from "react-bootstrap";
 import YoutubeSubscriberBarChart from "../components/YoutubeSubscriberBarChart.js";
 import SortDropdown from "../components/SortDropdown.js";
 import FilterControl from "../components/FilterControl.js";
+import ReactLoading from 'react-loading';
 import { rgbToHex } from '../utils/app-utils';
 const { getColor } = require('color-thief-node');
 
 const YOUTUBE_CHANNELS_API = "https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet";
-const YOUTUBE_CHANNEL_IDS = [
-  "UCp6993wxpyDPHUpavwDFqgg",
-  "UCDqI2jOz0weumE8s7paEk6g",
-  "UC-hM6YJuNYVAmUWxeIr9FeA",
-  "UC5CwaMl1eIgY8h02uZw7u8A",
-  "UCD8HOxPs4Xvsm8H0ZxXGiBw",
-  "UCQ0UDLQCjY0rmuxCDE38FGg",
-  "UCdn5BQ06XqgXoAxIhbqw5Rg",
-  "UCFTLzh12_nrtzqBPsTCqenA",
-  "UC1CfXB_kRs3C-zaeTG3oGyg",
-  "UC1opHUrw8rvnsadT-iGp7Cg",
-  "UCXTpFs_3PqI41qX2d9tL2Rw",
-  "UC7fk0CB07ly8oSl0aqKkqFg",
-  "UC1suqwovbL1kzsoaZgFZLKg",
-  "UCvzGlP9oQwU--Y0r9id_jnA",
-  "UCp-5t9SrOQwXMU7iIjQfARg",
-  "UChAnqc_AY5_I3Px5dig3X1Q",
-  "UCvaTdHTWBGv3MKj3KVqJVCw",
-  "UC1DCedRgGHBdm81E1llLhOQ",
-  "UCl_gCybOJRIgOXw6Qb4qJzQ",
-  "UCvInZx9h3jC2JzsIzoOebWg",
-  "UCdyqAaZDKHXg4Ahi7VENThQ",
-  "UCCzUftO8KOVkV4wQG1vkUvg",
-  "UCZlDXzGoo7d44bwdNObFacg",
-  "UCS9uQI-jC3DE0L4IpXyvr6w",
-  "UCqm3BQLlJfvkTsX_hvm0UmA",
-  "UC1uv2Oq6kNxgATlCiez59hw",
-  "UCa9Y57gfeY0Zro_noHRVrnw",
-  "UCFKOVgVbGmX65RxO3EtH3iw",
-  "UCAWSyEs_Io8MtpY3m-zqILA",
-  "UCUKD-uaobj9jiqB-VXt71mA",
-  "UCK9V2B22uJYu3N7eR_BT9QA",
-  "UC0TXe_LYZ4scaW2XMyi5_kw",
-  "UCL_qhgtOy0dy1Agp8vkySQg",
-  "UCHsx4Hqa-1ORjQTh9TYDhww",
-  "UCMwGHR0BTZuLsmjY_NT5Pwg",
-  "UCoSrY_IQQVpmIRZ9Xf-y93g",
-  "UCyl1z3jo3XHR1riLFKG5UAg",
-  "UCOyYb1c43VlX9rc_lT6NKQw",
-  "UCP0BspO_AMEe3aQqqpo89Dg",
-  "UCAoy6rzhSf4ydcYjJw3WoVg",
-];
+
+const YOUTUBE_CHANNEL_LIST = {
+  "UCD8HOxPs4Xvsm8H0ZxXGiBw": 'gen1',
+  "UCCzUftO8KOVkV4wQG1vkUvg": 'gen3',
+  "UCa9Y57gfeY0Zro_noHRVrnw": 'gen4',
+  "UCyl1z3jo3XHR1riLFKG5UAg": 'myth',
+  "UChAnqc_AY5_I3Px5dig3X1Q": 'gamers',
+  "UC0TXe_LYZ4scaW2XMyi5_kw": 'music',
+  "UC1CfXB_kRs3C-zaeTG3oGyg": 'gen1',
+  "UCK9V2B22uJYu3N7eR_BT9QA": 'gen5',
+  "UCUKD-uaobj9jiqB-VXt71mA": 'gen5',
+  "UCXTpFs_3PqI41qX2d9tL2Rw": 'gen2',
+  "UCp-5t9SrOQwXMU7iIjQfARg": 'gamers',
+  "UCdn5BQ06XqgXoAxIhbqw5Rg": 'gen1',
+  "UCS9uQI-jC3DE0L4IpXyvr6w": 'gen4',
+  "UCoSrY_IQQVpmIRZ9Xf-y93g": 'myth',
+  "UCAoy6rzhSf4ydcYjJw3WoVg": 'area15',
+  "UCHsx4Hqa-1ORjQTh9TYDhww": 'myth',
+  "UCP0BspO_AMEe3aQqqpo89Dg": 'area15',
+  "UCvaTdHTWBGv3MKj3KVqJVCw": 'gamers',
+  "UCqm3BQLlJfvkTsX_hvm0UmA": 'gen4',
+  "UCMwGHR0BTZuLsmjY_NT5Pwg": 'myth',
+  "UCl_gCybOJRIgOXw6Qb4qJzQ": 'gen3',
+  "UC-hM6YJuNYVAmUWxeIr9FeA": '3d',
+  "UCdyqAaZDKHXg4Ahi7VENThQ": 'gen3',
+  "UCZlDXzGoo7d44bwdNObFacg": 'gen4',
+  "UC1opHUrw8rvnsadT-iGp7Cg": 'gen2',
+  "UCOyYb1c43VlX9rc_lT6NKQw": 'area15',
+  "UCFTLzh12_nrtzqBPsTCqenA": 'gen1',
+  "UC7fk0CB07ly8oSl0aqKkqFg": 'gen2',
+  "UC1suqwovbL1kzsoaZgFZLKg": 'gen2',
+  "UC1DCedRgGHBdm81E1llLhOQ": 'gen3',
+  "UCL_qhgtOy0dy1Agp8vkySQg": 'myth',
+  "UCvInZx9h3jC2JzsIzoOebWg": 'gen3',
+  "UCDqI2jOz0weumE8s7paEk6g": '3d',
+  "UCp6993wxpyDPHUpavwDFqgg": '3d',
+  "UCAWSyEs_Io8MtpY3m-zqILA": 'gen5',
+  "UCvzGlP9oQwU--Y0r9id_jnA": 'gen2',
+  "UCQ0UDLQCjY0rmuxCDE38FGg": 'gen1',
+  "UC1uv2Oq6kNxgATlCiez59hw": 'gen4',
+  "UCFKOVgVbGmX65RxO3EtH3iw": 'gen5',
+  "UC5CwaMl1eIgY8h02uZw7u8A": '2d',
+};
 
 export async function getServerSideProps() {
   const res = await fetch(
-    `${YOUTUBE_CHANNELS_API}&id=${YOUTUBE_CHANNEL_IDS}&key=${process.env.YOUTUBE_API_KEY}`
+    `${YOUTUBE_CHANNELS_API}&id=${Object.keys(YOUTUBE_CHANNEL_LIST)}&key=${process.env.YOUTUBE_API_KEY}`
   );
   const data = await res.json();
   return {
@@ -68,7 +70,20 @@ export default class Index extends React.Component {
     super(props);
     this.state = {
       sort: 'SUBSCRIBERS_DESC',
-      data: []
+      data: [],
+      filters: [
+        'gen1',
+        'gen2',
+        'gen3',
+        'gen4',
+        'gen5',
+        'gamers',
+        'myth',
+        '2d',
+        '3d',
+        'area15',
+        'music',
+      ]
     }
   }
 
@@ -81,6 +96,8 @@ export default class Index extends React.Component {
       channelName: item.snippet.title,
       color: '#dc3545',
       subscriberCount: item.statistics.subscriberCount,
+      category: YOUTUBE_CHANNEL_LIST[item.id],
+      display: true
     }));
 
     let loadingImageCount = 0;
@@ -114,8 +131,7 @@ export default class Index extends React.Component {
     })
   }
 
-  sortData (data) {
-    const { sort } = this.state;
+  sortData (data, sort) {
     const sortedData = [...data].sort((a, b) => a.subscriberCount - b.subscriberCount);
 
     if (sort == 'SUBSCRIBERS_DESC') {
@@ -125,15 +141,30 @@ export default class Index extends React.Component {
     return sortedData;
   }
 
-  handleDataInitialize (data) {
-    this.setState({ data: this.sortData(data) });
+  filterData (data, filters) {
+    return data.map(el => {
+      el.display = filters.includes(el.category);
+      return el;
+    })
   }
-  
 
-  handleSortChange (sortKey) {
-    this.setState({ sort: sortKey }, () => {
-      this.setState({ data: this.sortData(this.state.data) });
-    });
+  setDisplayData (data, filters, sort) {
+    return this.sortData(this.filterData(data, filters), sort);
+  }
+
+  handleDataInitialize (data) {
+    const { filters, sort } = this.state;
+    this.setState({ data: this.setDisplayData(data, filters, sort) });
+  }
+
+  handleFilterUpdate = (newFilter) => {
+    const { data, sort } = this.state;
+    this.setState({ filters: newFilter, data: this.setDisplayData(data, newFilter, sort) });
+  }
+
+  handleSortChange = (sort) => {
+    const { data, filters } = this.state;
+    this.setState({ sort: sort, data: this.setDisplayData(data, filters, sort) });
   }
 
   componentDidMount () {
@@ -144,7 +175,14 @@ export default class Index extends React.Component {
   }
 
   render () {
-    const { data } = this.state;
+    const { data, filters, sort } = this.state;
+    const mainComponents = (
+      <Col>
+        <SortDropdown onSortChange={this.handleSortChange} />
+        <FilterControl filters={filters} collapse={false} onFilterUpdate={this.handleFilterUpdate} />
+        <YoutubeSubscriberBarChart sort={sort} data={data} />
+      </Col>
+    );
     return (
       <div>
         <Head>
@@ -156,25 +194,15 @@ export default class Index extends React.Component {
             <Col xs="auto" md="auto">
               <h2 className="mt-5 font-weight-bold text-light text-center">
                 Hololive YouTube Subscriber Count
-            </h2>
+              </h2>
               <p className="text-secondary text-center">
                 All data are fetched from the members' official YouTube channel.
-            </p>
+              </p>
             </Col>
           </Row>
           <Row>
-            <Col>
-              <SortDropdown onSortChange={this.handleSortChange.bind(this)} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <FilterControl collapse={false} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <YoutubeSubscriberBarChart sort={this.state.sort} data={data}/>
+            <Col className="d-flex justify-content-center">
+              {(data.length > 0) ? mainComponents : <ReactLoading className="mt-5" type="bubbles" color="#f01f1f" delay={0} />}
             </Col>
           </Row>
         </Container>
