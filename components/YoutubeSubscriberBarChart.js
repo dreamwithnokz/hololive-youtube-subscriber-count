@@ -46,7 +46,7 @@ const CHART_OPTIONS = {
         return (tooltipItems.length == 0) ? '' : tooltipItems[0].yLabel;
       },
       label: function (tooltipItems) {
-        const subcriberCountText = intl.formatNumber(tooltipItems.xLabel, { notation: "compact", compactDisplay: "short" });
+        const subcriberCountText = intl.formatNumber(tooltipItems.xLabel, { notation: "compact", compactDisplay: "short", maximumFractionDigits: 2 });
         return ` ${subcriberCountText} Subscribers`;
       },
     }
