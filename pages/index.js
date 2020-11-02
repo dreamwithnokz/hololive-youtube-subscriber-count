@@ -161,8 +161,10 @@ export default class Index extends React.Component {
             </p>
             </Col>
           </Row>
-          <Row className="justify-content-end">
-            <SortDropdown onSortChange={this.handleSortChange.bind(this)}/>
+          <Row>
+            <Col>
+              <SortDropdown onSortChange={this.handleSortChange.bind(this)} />
+            </Col>
           </Row>
           <Row>
             <Col>

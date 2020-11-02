@@ -22,14 +22,14 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
 
   render() {
     return (
-      <Form inline className="mb-2">
+      <Form inline className="mb-2 w-100 justify-content-sm-end">
         <Form.Label className={[styles.label, "my-1", "mr-2"]} htmlFor="sortPref">
           Sort by 
         </Form.Label>
         <Form.Control
           as="select"
           id="sortPref"
-          className={[styles.sortSelection, "my-1", "mr-sm-2"]}
+          className={[styles.sortSelection, "my-1"]}
           onChange={this.handleSortChange.bind(this)}
           custom>
             {this.renderSortOptions()}
