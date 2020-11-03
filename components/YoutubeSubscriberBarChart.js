@@ -1,12 +1,15 @@
 import React from "react";
-import ReactLoading from 'react-loading';
 import { Chart, HorizontalBar } from "react-chartjs-2";
 import { createIntl, createIntlCache } from 'react-intl';
-const { getColor } = require('color-thief-node');
+import { boundingRects } from '../utils/app-utils';
 
-const intl = createIntl({ locale: 'en', defaultLocale: 'en', }, createIntlCache());
+const intl = createIntl({ locale: 'en', defaultLocale: 'en' }, createIntlCache());
 
 const THUMBNAIL_SIZE = 38.5;
+
+const ROW_HEIGHT = 53.5;
+
+const X_AXIS_HEIGHT = 38;
 
 const GRIDLINE_COLOR = '#262424';
 
@@ -31,6 +34,7 @@ const CHART_OPTIONS = {
         color: GRIDLINE_COLOR
       },
       ticks: {
+        beginAtZero: true,
         callback: function (value) {
           return intl.formatNumber(value, { notation: "compact", compactDisplay: "short" });
         },
@@ -53,108 +57,6 @@ const CHART_OPTIONS = {
   },
   maintainAspectRatio: false,
 };
-
-function isVertical(vm) {
-  return vm && vm.width !== undefined;
-}
-
-function getBarBounds(vm) {
-  var x1, x2, y1, y2, half;
-
-  if (isVertical(vm)) {
-    half = vm.width / 2;
-    x1 = vm.x - half;
-    x2 = vm.x + half;
-    y1 = Math.min(vm.y, vm.base);
-    y2 = Math.max(vm.y, vm.base);
-  } else {
-    half = vm.height / 2;
-    x1 = Math.min(vm.x, vm.base);
-    x2 = Math.max(vm.x, vm.base);
-    y1 = vm.y - half;
-    y2 = vm.y + half;
-  }
-
-  return {
-    left: x1,
-    top: y1,
-    right: x2,
-    bottom: y2
-  };
-}
-
-function swap(orig, v1, v2) {
-  return orig === v1 ? v2 : orig === v2 ? v1 : orig;
-}
-
-function parseBorderSkipped(vm) {
-  var edge = vm.borderSkipped;
-  var res = {};
-
-  if (!edge) {
-    return res;
-  }
-
-  if (vm.horizontal) {
-    if (vm.base > vm.x) {
-      edge = swap(edge, 'left', 'right');
-    }
-  } else if (vm.base < vm.y) {
-    edge = swap(edge, 'bottom', 'top');
-  }
-
-  res[edge] = true;
-  return res;
-}
-
-function parseBorderWidth(vm, maxW, maxH) {
-  var value = vm.borderWidth;
-  var skip = parseBorderSkipped(vm);
-  var t, r, b, l;
-
-  if (Chart.helpers.isObject(value)) {
-    t = +value.top || 0;
-    r = +value.right || 0;
-    b = +value.bottom || 0;
-    l = +value.left || 0;
-  } else {
-    t = r = b = l = +value || 0;
-  }
-
-  return {
-    t: skip.top || (t < 0) ? 0 : t > maxH ? maxH : t,
-    r: skip.right || (r < 0) ? 0 : r > maxW ? maxW : r,
-    b: skip.bottom || (b < 0) ? 0 : b > maxH ? maxH : b,
-    l: skip.left || (l < 0) ? 0 : l > maxW ? maxW : l
-  };
-}
-
-function boundingRects(vm) {
-  var bounds = getBarBounds(vm);
-  var width = bounds.right - bounds.left;
-  var height = bounds.bottom - bounds.top;
-  var border = parseBorderWidth(vm, width / 2, height / 2);
-
-  return {
-    outer: {
-      x: bounds.left,
-      y: bounds.top,
-      w: width,
-      h: height
-    },
-    inner: {
-      x: bounds.left + border.l,
-      y: bounds.top + border.t,
-      w: width - border.l - border.r,
-      h: height - border.t - border.b
-    }
-  };
-}
-
-const rgbToHex = (color) => '#' + color.map(x => {
-  const hex = x.toString(16);
-  return hex.length === 1 ? '0' + hex : hex;
-}).join('');
 
 Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
   draw () {
@@ -190,17 +92,16 @@ Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
 });
 
 export default class YoutubeSubscriberHorizontalBar extends React.Component {
-
-  constructor (props) {
-    super(props);
-    this.state = {
-      data: {},
-    };
+  getDisplayedDataHeight () {
+    return this.getDisplayedDataCount() * ROW_HEIGHT + X_AXIS_HEIGHT;
   }
 
-  fetchData (items) {
-    const component = this;
-    const data = {
+  getDisplayedDataCount () {
+    return this.props.data.filter(e => e.display).length;
+  }
+
+  loadDataToChart (data) {
+    const chartData = {
       labels: [],
       datasets: [{
         data: [],
@@ -214,61 +115,29 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
       }],
     };
 
-    let loadingImageCount = 0;
-
-    items.forEach(function (item, i) {
-      data.labels.push(item.channelName);
-      data.datasets[0].data.push(item.subscriberCount);
-      data.datasets[0].channelIds.push(item.channelId);
-
-      // load avatar images
-      var img = new Image();
-      img.src = item.avatarUrl.default.url;
-      img.crossOrigin = "anonymous";
-      loadingImageCount++;
-
-      // when image fails to load, decrement image loading counter
-      img.onerror = function () {
-        loadingImageCount--;
-        if (loadingImageCount == 0) {
-          component.loadData(data);
-        }
-      };
-
-      // when image is loaded, decrement loading counter and get dominant color
-      img.onload = function () {
-        let color = getColor(this, 16);
-        data.datasets[0].barColors[i] = rgbToHex(color);
-        loadingImageCount--;
-        if (loadingImageCount == 0) {
-          component.loadData(data);
-        }
-      };
-
-      data.datasets[0].images.push(img);
+    let displayedIndex = 0;
+    data.forEach(function (item, i) {
+      if (!item.display) {
+        return;
+      }
+      chartData.labels.push(item.channelName);
+      chartData.datasets[0].data.push(item.subscriberCount);
+      chartData.datasets[0].channelIds.push(item.channelId);
+      chartData.datasets[0].barColors[displayedIndex] = item.color;
+      chartData.datasets[0].images.push(item.channelImage);
+      displayedIndex++;
     });
-  }
 
-  loadData (data) {
     // inject the images and channelIds on the chart instance because it cannot be in the dataset
     Chart.pluginService.register({
       beforeDatasetUpdate: function (chart) {
-        chart.data.images = data.datasets[0].images;
-        chart.data.channelIds = data.datasets[0].channelIds;
-        chart.data.barColors = data.datasets[0].barColors;
+        chart.data.images = chartData.datasets[0].images;
+        chart.data.channelIds = chartData.datasets[0].channelIds;
+        chart.data.barColors = chartData.datasets[0].barColors;
       },
     });
 
-    this.setState({ data: data });
-  }
-
-  sortItemsAscending (items) {
-    return items.map(item => ({
-      channelId: item.id,
-      channelName: item.snippet.title,
-      subscriberCount: item.statistics.subscriberCount,
-      avatarUrl: item.snippet.thumbnails,
-    })).sort((a, b) => a.subscriberCount - b.subscriberCount).reverse();
+    return chartData;
   }
 
   handleElementsClick (e, f) {
@@ -280,30 +149,12 @@ export default class YoutubeSubscriberHorizontalBar extends React.Component {
     window.open(`https://youtube.com/channel/${channelId}`, '_blank');
   }
 
-  componentDidMount () {
-    // for some reason, calling fetchData directly blocks/delays the ReactLoading rendering
-    // call fetchData asynchronously
-    setTimeout(() => {
-      this.fetchData(this.sortItemsAscending(this.props.items));
-    }, 0);
-  }
-
   render() {
-    const { data } = this.state;
     return (
-      <div className="d-flex justify-content-center">
-        { (Object.keys(data).length <= 0) ?
-          <ReactLoading className="mt-5" type="bubbles" color="#f01f1f" delay={0}/>
-          :
-          <HorizontalBar
-            id="chart"
-            data={data}
-            options={CHART_OPTIONS}
-            width={400}
-            height={2200}
-            onElementsClick={this.handleElementsClick} />
-        }
-      </div>
+      (this.getDisplayedDataCount() > 0) ?
+        <div className="w-100" style={{ height: Math.max(this.getDisplayedDataHeight(), 50) }}>
+          <HorizontalBar id="chart" data={this.loadDataToChart(this.props.data)} options={CHART_OPTIONS} onElementsClick={this.handleElementsClick} />
+        </div> : null
     );
   }
 }
