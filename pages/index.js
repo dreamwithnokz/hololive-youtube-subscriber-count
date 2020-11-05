@@ -63,30 +63,42 @@ export default class Index extends React.Component {
 
     channelData.forEach(item => {
       // load avatar images
-      var img = new Image();
-      img.src = item.avatarUrl.default.url;
-      img.crossOrigin = "anonymous";
-      loadingImageCount++;
+      let xhr = new XMLHttpRequest();
 
-      // when image fails to load, decrement image loading counter
-      img.onerror = function () {
-        loadingImageCount--;
-        if (loadingImageCount == 0) {
-          component.handleDataInitialize(channelData);
-        }
+      // when xhr to the image has loaded, put data in Image object
+      xhr.onload = function () {
+        let url = URL.createObjectURL(this.response);
+        let img = new Image();
+
+        img.src = url;
+        loadingImageCount++;
+
+        // when image fails to load, decrement image loading counter
+        img.onerror = function () {
+          URL.revokeObjectURL(url);
+          loadingImageCount--;
+          if (loadingImageCount == 0) {
+            component.handleDataInitialize(channelData);
+          }
+        };
+
+        // when image is loaded, decrement loading counter and get dominant color
+        img.onload = function () {
+          URL.revokeObjectURL(url);
+          item.color = rgbToHex(getColor(this, 16));
+          loadingImageCount--;
+          if (loadingImageCount == 0) {
+            component.handleDataInitialize(channelData);
+          }
+        };
+
+        item.channelImage = img;
       };
 
-      // when image is loaded, decrement loading counter and get dominant color
-      img.onload = function () {
-        let color = getColor(this, 16);
-        item.color = rgbToHex(color);
-        loadingImageCount--;
-        if (loadingImageCount == 0) {
-          component.handleDataInitialize(channelData);
-        }
-      };
-
-      item.channelImage = img;
+      // start xhr to load avatar images properly
+      xhr.open('GET', item.avatarUrl.default.url, true);
+      xhr.responseType = 'blob';
+      xhr.send();
     })
   }
 

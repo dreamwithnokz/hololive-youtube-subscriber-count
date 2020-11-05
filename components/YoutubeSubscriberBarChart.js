@@ -71,7 +71,7 @@ Chart.helpers.extend(Chart.elements.Rectangle.prototype, {
     ctx.fillRect(outer.x, outer.y, outer.w, outer.h);
 
     // extend: draw image
-    if (img.width > 0 && img.height > 0) {
+    if (img && img.width > 0 && img.height > 0) {
       const x0 = this._chart.chartArea.left;
       ctx.drawImage(img, Math.max(x0, outer.x + outer.w - THUMBNAIL_SIZE), outer.y, THUMBNAIL_SIZE, THUMBNAIL_SIZE);
     }
