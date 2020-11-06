@@ -1,5 +1,6 @@
 import React from 'react';
 import CustomCheckbox from './CustomCheckbox';
+import { Button } from 'react-bootstrap';
 
 const FILTERS = {
   'gen1': '1st Generation',
@@ -28,6 +29,14 @@ export default class FilterControl extends React.Component {
     onFilterUpdate(newFilters);
   }
 
+  handleSelectAllClick = () => {
+    this.props.onFilterUpdate(Object.keys(FILTERS));
+  }
+
+  handleClearAllClick = () => {
+    this.props.onFilterUpdate([]);
+  }
+
   renderFilterOptions () {
     const { filters } = this.props;
     return Object.keys(FILTERS).map(key =>
@@ -38,8 +47,10 @@ export default class FilterControl extends React.Component {
   render () {
     return (
       <div className={this.props.collapse ? 'collapse' : ''}>
-        <span style={{ color: '#dedede', fontWeight: 'bold', fontSize: 14 }}>Filters</span>
-        <div className="mb-2">{this.renderFilterOptions()}</div>
+        <span className="mr-4" style={{ color: '#dedede', fontWeight: 'bold', fontSize: 14 }}>Filters</span>
+        <Button className="btn-sm btn-danger py-0 mr-2" onClick={this.handleSelectAllClick}>All</Button>
+        <Button className="btn-sm btn-dark py-0" onClick={this.handleClearAllClick}>Clear</Button>
+        <div className="my-2">{this.renderFilterOptions()}</div>
       </div>
     )
   }
