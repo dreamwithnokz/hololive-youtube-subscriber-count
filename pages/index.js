@@ -2,6 +2,7 @@ import React from "react";
 import Head from "next/head";
 import { Container, Row, Col } from "react-bootstrap";
 import YoutubeSubscriberBarChart from "../components/YoutubeSubscriberBarChart.js";
+import CustomAlert from "../components/CustomAlert.js";
 import SortDropdown from "../components/SortDropdown.js";
 import FilterControl from "../components/FilterControl.js";
 import ReactLoading from 'react-loading';
@@ -28,6 +29,7 @@ export default class Index extends React.Component {
   constructor (props) {
     super(props);
     this.state = {
+      offlineAlertVisible: false,
       sort: 'SUBSCRIBERS_DESC',
       data: [],
       filters: [
@@ -138,15 +140,23 @@ export default class Index extends React.Component {
     this.setState({ sort: sort, data: this.setDisplayData(data, filters, sort) });
   }
 
+  handleWindowOffline = () => {
+    this.setState({ offlineAlertVisible: true });
+  }
+
   componentDidMount () {
     // call async to not block rendering of loading component
     setTimeout(() => {
       this.initializeData(this.props.data.items);
     }, 0);
+
+    // handle window offline
+    window.addEventListener('offline', this.handleWindowOffline);
+    this.setState({ offlineAlertVisible: !navigator.onLine });
   }
 
   render () {
-    const { data, filters, sort } = this.state;
+    const { data, filters, sort, offlineAlertVisible } = this.state;
     const mainComponents = (
       <Col>
         <SortDropdown onSortChange={this.handleSortChange} />
@@ -158,7 +168,21 @@ export default class Index extends React.Component {
       <div>
         <Head>
           <title>Hololive YouTube Subscriber Count</title>
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+          <meta name="apple-mobile-web-app-title" content="Hololive YT Subscriber Count" />
+          <meta name="application-name" content="Hololive YouTube Subscriber Count" />
+          <meta name="description" content="View Hololive's VTubers YouTube subscriber count." />
+          <meta name="format-detection" content="telephone=no" />
+          <meta name="mobile-web-app-capable" content="yes" />
+          <meta name="theme-color" content="#18191A" />
+          <meta name='viewport' content='minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover' />
+          <link rel="apple-touch-icon" sizes="512x512" href="/hololive-512.png" />
           <link rel="icon" href="/favicon.png" />
+          <link rel="icon" type="image/png" sizes="16x16" href="/hololive-16.png" />
+          <link rel="icon" type="image/png" sizes="32x32" href="/hololive-32.png" />
+          <link rel="manifest" href="/manifest.json" />
+          <link rel="shortcut icon" href="/favicon.png" />
         </Head>
         <Container className="content">
           <Row className="justify-content-center">
@@ -169,6 +193,11 @@ export default class Index extends React.Component {
               <p className="text-secondary text-center">
                 All data are fetched from the members' official YouTube channel.
               </p>
+            </Col>
+          </Row>
+          <Row>
+            <Col className="d-flex justify-content-center">
+              <CustomAlert visible={offlineAlertVisible} message="You are offline. Connect to the internet to fetch the latest information." />
             </Col>
           </Row>
           <Row>
