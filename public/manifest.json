@@ -1,0 +1,32 @@
+{
+  "name": "Hololive YouTube Subscriber Count App",
+  "short_name": "Hololive YT Subscriber Count",
+  "icons": [
+    {
+      "src": "/maskable_icon.png",
+      "sizes": "930x930",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/hololive-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/hololive-384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/hololive-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#18191A",
+  "background_color": "#F3F3F3",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}
