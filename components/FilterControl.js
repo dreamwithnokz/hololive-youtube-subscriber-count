@@ -13,6 +13,7 @@ const FILTERS = {
   '3d': '3D Talents',
   'myth': '-Myth- (EN)',
   'area15': 'Area 15 (ID)',
+  'holoID2': 'Hololive ID 2nd Gen',
   'music': 'INoNaKa MUSIC',
 };
 
