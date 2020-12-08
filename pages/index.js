@@ -43,6 +43,7 @@ export default class Index extends React.Component {
         '2d',
         '3d',
         'area15',
+        'holoID2',
         'music',
       ]
     }
