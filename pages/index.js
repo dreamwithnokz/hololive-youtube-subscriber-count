@@ -180,7 +180,7 @@ export default class Index extends React.Component {
           <meta name='viewport' content='minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover' />
           <link rel="apple-touch-icon" sizes="512x512" href="/hololive-512.png" />
           <link rel="icon" href="/favicon.png" />
-          <link rel="icon" type="image/png" sizes="16x16" href="/hololive-16.png" />
+          <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
           <link rel="icon" type="image/png" sizes="32x32" href="/hololive-32.png" />
           <link rel="manifest" href="/manifest.json" />
           <link rel="shortcut icon" href="/favicon.png" />
