@@ -14,7 +14,7 @@
     "chart.js": "^2.9.4",
     "color-thief-node": "^1.0.3",
     "next": "9.5.5",
-    "next-pwa": "^3.1.5",
+    "next-pwa": "^5.0.3",
     "react": "17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-chartjs-2": "^2.10.0",
