@@ -5,66 +5,76 @@ import YoutubeSubscriberBarChart from "../components/YoutubeSubscriberBarChart.j
 import CustomAlert from "../components/CustomAlert.js";
 import SortDropdown from "../components/SortDropdown.js";
 import FilterControl from "../components/FilterControl.js";
-import ReactLoading from 'react-loading';
-import { rgbToHex } from '../utils/app-utils';
-const { getColor } = require('color-thief-node');
+import ReactLoading from "react-loading";
+import { rgbToHex } from "../utils/app-utils";
+const { getColor } = require("color-thief-node");
 
-const YOUTUBE_CHANNELS_API = "https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet";
+const YOUTUBE_CHANNELS_API =
+  "https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet";
 
 export async function getServerSideProps() {
-  const channelsReferenceList = (await import('../data/hololive-channels.json'))['channels'];
+  const channelsReferenceList = (
+    await import("../data/hololive-channels.json")
+  )["channels"];
   const res = await fetch(
-    `${YOUTUBE_CHANNELS_API}&id=${Object.keys(channelsReferenceList)}&key=${process.env.YOUTUBE_API_KEY}`
+    `${YOUTUBE_CHANNELS_API}&id=${Object.keys(channelsReferenceList)}&key=${
+      process.env.YOUTUBE_API_KEY
+    }`
+  );
+  const liveStatus = await fetch(
+    "https://api.holotools.app/v1/live?lookback_hours=0&max_upcoming_hours=12&hide_channel_desc=1"
   );
   const data = await res.json();
+  const liveStatusData = await liveStatus.json();
   return {
     props: {
       data,
       channelsReferenceList,
+      liveStatusData,
     },
   };
 }
 
 export default class Index extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props);
     this.state = {
       offlineAlertVisible: false,
-      sort: 'SUBSCRIBERS_DESC',
+      sort: "SUBSCRIBERS_DESC",
       data: [],
       filters: [
-        'gen1',
-        'gen2',
-        'gen3',
-        'gen4',
-        'gen5',
-        'gamers',
-        'myth',
-        '2d',
-        '3d',
-        'area15',
-        'holoID2',
-        'music',
-      ]
-    }
+        "gen1",
+        "gen2",
+        "gen3",
+        "gen4",
+        "gen5",
+        "gamers",
+        "myth",
+        "2d",
+        "3d",
+        "area15",
+        "holoID2",
+        "music",
+      ],
+    };
   }
 
-  initializeData (items) {
+  initializeData(items) {
     const component = this;
-    const channelData = items.map(item => ({
+    const channelData = items.map((item) => ({
       avatarUrl: item.snippet.thumbnails,
       channelId: item.id,
       channelImage: null,
       channelName: item.snippet.title,
-      color: '#dc3545',
+      color: "#dc3545",
       subscriberCount: item.statistics.subscriberCount,
       category: this.props.channelsReferenceList[item.id],
-      display: true
+      display: true,
     }));
 
     let loadingImageCount = 0;
 
-    channelData.forEach(item => {
+    channelData.forEach((item) => {
       // load avatar images
       let xhr = new XMLHttpRequest();
 
@@ -99,70 +109,86 @@ export default class Index extends React.Component {
       };
 
       // start xhr to load avatar images properly
-      xhr.open('GET', item.avatarUrl.default.url, true);
-      xhr.responseType = 'blob';
+      xhr.open("GET", item.avatarUrl.default.url, true);
+      xhr.responseType = "blob";
       xhr.send();
-    })
+    });
   }
 
-  sortData (data, sort) {
-    const sortedData = [...data].sort((a, b) => a.subscriberCount - b.subscriberCount);
+  sortData(data, sort) {
+    const sortedData = [...data].sort(
+      (a, b) => a.subscriberCount - b.subscriberCount
+    );
 
-    if (sort == 'SUBSCRIBERS_DESC') {
+    if (sort == "SUBSCRIBERS_DESC") {
       sortedData.reverse();
     }
 
     return sortedData;
   }
 
-  filterData (data, filters) {
-    return data.map(el => {
+  filterData(data, filters) {
+    return data.map((el) => {
       el.display = filters.includes(el.category);
       return el;
-    })
+    });
   }
 
-  setDisplayData (data, filters, sort) {
+  setDisplayData(data, filters, sort) {
     return this.sortData(this.filterData(data, filters), sort);
   }
 
-  handleDataInitialize (data) {
+  handleDataInitialize(data) {
     const { filters, sort } = this.state;
     this.setState({ data: this.setDisplayData(data, filters, sort) });
   }
 
   handleFilterUpdate = (newFilter) => {
     const { data, sort } = this.state;
-    this.setState({ filters: newFilter, data: this.setDisplayData(data, newFilter, sort) });
-  }
+    this.setState({
+      filters: newFilter,
+      data: this.setDisplayData(data, newFilter, sort),
+    });
+  };
 
   handleSortChange = (sort) => {
     const { data, filters } = this.state;
-    this.setState({ sort: sort, data: this.setDisplayData(data, filters, sort) });
-  }
+    this.setState({
+      sort: sort,
+      data: this.setDisplayData(data, filters, sort),
+    });
+  };
 
   handleWindowOffline = () => {
     this.setState({ offlineAlertVisible: true });
-  }
+  };
 
-  componentDidMount () {
+  componentDidMount() {
     // call async to not block rendering of loading component
     setTimeout(() => {
       this.initializeData(this.props.data.items);
     }, 0);
 
     // handle window offline
-    window.addEventListener('offline', this.handleWindowOffline);
+    window.addEventListener("offline", this.handleWindowOffline);
     this.setState({ offlineAlertVisible: !navigator.onLine });
   }
 
-  render () {
+  render() {
     const { data, filters, sort, offlineAlertVisible } = this.state;
     const mainComponents = (
       <Col>
         <SortDropdown onSortChange={this.handleSortChange} />
-        <FilterControl filters={filters} collapse={false} onFilterUpdate={this.handleFilterUpdate} />
-        <YoutubeSubscriberBarChart sort={sort} data={data} />
+        <FilterControl
+          filters={filters}
+          collapse={false}
+          onFilterUpdate={this.handleFilterUpdate}
+        />
+        <YoutubeSubscriberBarChart
+          sort={sort}
+          data={data}
+          liveStatusData={this.props.liveStatusData}
+        />
       </Col>
     );
     return (
@@ -170,18 +196,42 @@ export default class Index extends React.Component {
         <Head>
           <title>Hololive YouTube Subscriber Count</title>
           <meta name="apple-mobile-web-app-capable" content="yes" />
-          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-          <meta name="apple-mobile-web-app-title" content="Hololive YT Subscriber Count" />
-          <meta name="application-name" content="Hololive YouTube Subscriber Count" />
-          <meta name="description" content="View Hololive's VTubers YouTube subscriber count." />
+          <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="default"
+          />
+          <meta
+            name="apple-mobile-web-app-title"
+            content="Hololive YT Subscriber Count"
+          />
+          <meta
+            name="application-name"
+            content="Hololive YouTube Subscriber Count"
+          />
+          <meta
+            name="description"
+            content="View Hololive's VTubers YouTube subscriber count."
+          />
           <meta name="format-detection" content="telephone=no" />
           <meta name="mobile-web-app-capable" content="yes" />
           <meta name="theme-color" content="#18191A" />
-          <meta name='viewport' content='minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover' />
-          <link rel="apple-touch-icon" sizes="512x512" href="/hololive-512.png" />
+          <meta
+            name="viewport"
+            content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no, user-scalable=no, viewport-fit=cover"
+          />
+          <link
+            rel="apple-touch-icon"
+            sizes="512x512"
+            href="/hololive-512.png"
+          />
           <link rel="icon" href="/favicon.png" />
           <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
-          <link rel="icon" type="image/png" sizes="32x32" href="/hololive-32.png" />
+          <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/hololive-32.png"
+          />
           <link rel="manifest" href="/manifest.json" />
           <link rel="shortcut icon" href="/favicon.png" />
         </Head>
@@ -198,19 +248,33 @@ export default class Index extends React.Component {
           </Row>
           <Row>
             <Col className="d-flex justify-content-center">
-              <CustomAlert visible={offlineAlertVisible} message="You are offline. Connect to the internet to fetch the latest information." />
+              <CustomAlert
+                visible={offlineAlertVisible}
+                message="You are offline. Connect to the internet to fetch the latest information."
+              />
             </Col>
           </Row>
           <Row>
             <Col className="d-flex justify-content-center">
-              {(data.length > 0) ? mainComponents : <ReactLoading className="mt-5" type="bubbles" color="#f01f1f" delay={0} />}
+              {data.length > 0 ? (
+                mainComponents
+              ) : (
+                <ReactLoading
+                  className="mt-5"
+                  type="bubbles"
+                  color="#f01f1f"
+                  delay={0}
+                />
+              )}
             </Col>
           </Row>
         </Container>
         <div className="footer text-center">
           The developer is not affiliated with Hololive Production.
-        <br />
-          <a href="https://www.dreamwithnokz.dev" target="_blank">dreamwithnokz.dev</a>
+          <br />
+          <a href="https://www.dreamwithnokz.dev" target="_blank">
+            dreamwithnokz.dev
+          </a>
         </div>
       </div>
     );
