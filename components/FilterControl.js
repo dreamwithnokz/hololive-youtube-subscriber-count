@@ -15,6 +15,8 @@ const FILTERS = {
   'area15': 'Area 15 (ID)',
   'holoID2': 'Hololive ID 2nd Gen',
   'music': 'INoNaKa MUSIC',
+  'starsGen1': 'Holostars 1st Gen',
+  'starsGen2': 'Holostars 2nd Gen',
 };
 
 export default class FilterControl extends React.Component {

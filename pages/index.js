@@ -55,6 +55,8 @@ export default class Index extends React.Component {
         "area15",
         "holoID2",
         "music",
+        "starsGen1",
+        "starsGen2",
       ],
     };
   }
