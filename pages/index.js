@@ -1,28 +1,28 @@
-import React from "react";
-import Head from "next/head";
-import { Container, Row, Col } from "react-bootstrap";
-import YoutubeSubscriberBarChart from "../components/YoutubeSubscriberBarChart.js";
-import CustomAlert from "../components/CustomAlert.js";
-import SortDropdown from "../components/SortDropdown.js";
-import FilterControl from "../components/FilterControl.js";
-import ReactLoading from "react-loading";
-import { rgbToHex } from "../utils/app-utils";
-const { getColor } = require("color-thief-node");
+import React from 'react';
+import Head from 'next/head';
+import { Container, Row, Col } from 'react-bootstrap';
+import YoutubeSubscriberBarChart from '../components/YoutubeSubscriberBarChart.js';
+import CustomAlert from '../components/CustomAlert.js';
+import SortDropdown from '../components/SortDropdown.js';
+import FilterControl from '../components/FilterControl.js';
+import ReactLoading from 'react-loading';
+import { rgbToHex } from '../utils/app-utils';
+const { getColor } = require('color-thief-node');
 
 const YOUTUBE_CHANNELS_API =
-  "https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet";
+  'https://www.googleapis.com/youtube/v3/channels?part=statistics,snippet';
 
 export async function getServerSideProps() {
   const channelsReferenceList = (
-    await import("../data/hololive-channels.json")
-  )["channels"];
+    await import('../data/hololive-channels.json')
+  )['channels'];
   const res = await fetch(
     `${YOUTUBE_CHANNELS_API}&id=${Object.keys(channelsReferenceList)}&key=${
       process.env.YOUTUBE_API_KEY
-    }`
+    }`,
   );
   const liveStatus = await fetch(
-    "https://api.holotools.app/v1/live?lookback_hours=0&max_upcoming_hours=12&hide_channel_desc=1"
+    'https://api.holotools.app/v1/live?lookback_hours=0&max_upcoming_hours=12&hide_channel_desc=1',
   );
   const data = await res.json();
   const liveStatusData = await liveStatus.json();
@@ -40,23 +40,23 @@ export default class Index extends React.Component {
     super(props);
     this.state = {
       offlineAlertVisible: false,
-      sort: "SUBSCRIBERS_DESC",
+      sort: 'SUBSCRIBERS_DESC',
       data: [],
       filters: [
-        "gen1",
-        "gen2",
-        "gen3",
-        "gen4",
-        "gen5",
-        "gamers",
-        "myth",
-        "2d",
-        "3d",
-        "area15",
-        "holoID2",
-        "music",
-        "starsGen1",
-        "starsGen2",
+        'gen1',
+        'gen2',
+        'gen3',
+        'gen4',
+        'gen5',
+        'gamers',
+        'myth',
+        '2d',
+        '3d',
+        'area15',
+        'holoID2',
+        'music',
+        'starsGen1',
+        'starsGen2',
       ],
     };
   }
@@ -68,7 +68,7 @@ export default class Index extends React.Component {
       channelId: item.id,
       channelImage: null,
       channelName: item.snippet.title,
-      color: "#dc3545",
+      color: '#dc3545',
       subscriberCount: item.statistics.subscriberCount,
       category: this.props.channelsReferenceList[item.id],
       display: true,
@@ -111,18 +111,18 @@ export default class Index extends React.Component {
       };
 
       // start xhr to load avatar images properly
-      xhr.open("GET", item.avatarUrl.default.url, true);
-      xhr.responseType = "blob";
+      xhr.open('GET', item.avatarUrl.default.url, true);
+      xhr.responseType = 'blob';
       xhr.send();
     });
   }
 
   sortData(data, sort) {
     const sortedData = [...data].sort(
-      (a, b) => a.subscriberCount - b.subscriberCount
+      (a, b) => a.subscriberCount - b.subscriberCount,
     );
 
-    if (sort == "SUBSCRIBERS_DESC") {
+    if (sort == 'SUBSCRIBERS_DESC') {
       sortedData.reverse();
     }
 
@@ -172,7 +172,7 @@ export default class Index extends React.Component {
     }, 0);
 
     // handle window offline
-    window.addEventListener("offline", this.handleWindowOffline);
+    window.addEventListener('offline', this.handleWindowOffline);
     this.setState({ offlineAlertVisible: !navigator.onLine });
   }
 
@@ -236,6 +236,9 @@ export default class Index extends React.Component {
           />
           <link rel="manifest" href="/manifest.json" />
           <link rel="shortcut icon" href="/favicon.png" />
+          <script>
+            let FF_FOUC_FIX;
+          </script>
         </Head>
         <Container className="content">
           <Row className="justify-content-center">
