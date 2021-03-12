@@ -236,9 +236,6 @@ export default class Index extends React.Component {
           />
           <link rel="manifest" href="/manifest.json" />
           <link rel="shortcut icon" href="/favicon.png" />
-          <script>
-            let FF_FOUC_FIX;
-          </script>
         </Head>
         <Container className="content">
           <Row className="justify-content-center">
