@@ -277,8 +277,8 @@ export default class Index extends React.Component {
         <div className="footer text-center">
           The developer is not affiliated with Hololive Production.
           <br />
-          <a href="https://www.dreamwithnokz.dev" target="_blank">
-            dreamwithnokz.dev
+          <a href="https://nokz.vercel.app/" target="_blank">
+          https://nokz.vercel.app/
           </a>
         </div>
       </div>
