@@ -3,20 +3,28 @@ import CustomCheckbox from './CustomCheckbox';
 import { Button } from 'react-bootstrap';
 
 const FILTERS = {
+  'gen0': '0th Generation',
   'gen1': '1st Generation',
   'gen2': '2nd Generation',
+  'gamers': 'Gamers',
   'gen3': '3rd Generation',
   'gen4': '4th Generation',
   'gen5': '5th Generation',
-  'gamers': 'Gamers',
-  '2d': '2D Talents',
-  '3d': '3D Talents',
-  'myth': '-Myth- (EN)',
-  'area15': 'Area 15 (ID)',
+  'gen6': '6th Generation',
+  
+  'myth': 'Myth (EN1)',
+  "projectHope": "Project:HOPE",
+  'council': 'Council (EN2)',
+
+  'area15': 'Area 15 (ID1)',
   'holoID2': 'Hololive ID 2nd Gen',
-  'music': 'INoNaKa MUSIC',
+  'holoID3': 'Hololive ID 3rd Gen',
+
   'starsGen1': 'Holostars 1st Gen',
   'starsGen2': 'Holostars 2nd Gen',
+  'starsGen3': 'Holostars 3rd Gen',
+
+  "official": "Official Channels"
 };
 
 export default class FilterControl extends React.Component {

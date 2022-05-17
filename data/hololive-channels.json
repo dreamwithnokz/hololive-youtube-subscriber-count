@@ -1,53 +1,91 @@
 {
   "channels": {
+    "UCp6993wxpyDPHUpavwDFqgg": "gen0",
+    "UC-hM6YJuNYVAmUWxeIr9FeA": "gen0",
+    "UCDqI2jOz0weumE8s7paEk6g": "gen0",
+    "UC5CwaMl1eIgY8h02uZw7u8A": "gen0",
+    "UC0TXe_LYZ4scaW2XMyi5_kw": "gen0",
+
     "UCD8HOxPs4Xvsm8H0ZxXGiBw": "gen1",
-    "UCCzUftO8KOVkV4wQG1vkUvg": "gen3",
-    "UCa9Y57gfeY0Zro_noHRVrnw": "gen4",
-    "UCyl1z3jo3XHR1riLFKG5UAg": "myth",
-    "UChAnqc_AY5_I3Px5dig3X1Q": "gamers",
-    "UC0TXe_LYZ4scaW2XMyi5_kw": "music",
     "UC1CfXB_kRs3C-zaeTG3oGyg": "gen1",
-    "UCK9V2B22uJYu3N7eR_BT9QA": "gen5",
-    "UCUKD-uaobj9jiqB-VXt71mA": "gen5",
-    "UCXTpFs_3PqI41qX2d9tL2Rw": "gen2",
-    "UCp-5t9SrOQwXMU7iIjQfARg": "gamers",
     "UCdn5BQ06XqgXoAxIhbqw5Rg": "gen1",
-    "UCS9uQI-jC3DE0L4IpXyvr6w": "gen4",
-    "UCoSrY_IQQVpmIRZ9Xf-y93g": "myth",
-    "UCAoy6rzhSf4ydcYjJw3WoVg": "area15",
-    "UCHsx4Hqa-1ORjQTh9TYDhww": "myth",
-    "UCP0BspO_AMEe3aQqqpo89Dg": "area15",
-    "UCvaTdHTWBGv3MKj3KVqJVCw": "gamers",
-    "UCqm3BQLlJfvkTsX_hvm0UmA": "gen4",
-    "UCMwGHR0BTZuLsmjY_NT5Pwg": "myth",
-    "UCl_gCybOJRIgOXw6Qb4qJzQ": "gen3",
-    "UC-hM6YJuNYVAmUWxeIr9FeA": "3d",
-    "UCdyqAaZDKHXg4Ahi7VENThQ": "gen3",
-    "UCZlDXzGoo7d44bwdNObFacg": "gen4",
-    "UC1opHUrw8rvnsadT-iGp7Cg": "gen2",
-    "UCOyYb1c43VlX9rc_lT6NKQw": "area15",
+    "UCQ0UDLQCjY0rmuxCDE38FGg": "gen1",
     "UCFTLzh12_nrtzqBPsTCqenA": "gen1",
+
+    "UCXTpFs_3PqI41qX2d9tL2Rw": "gen2",
     "UC7fk0CB07ly8oSl0aqKkqFg": "gen2",
     "UC1suqwovbL1kzsoaZgFZLKg": "gen2",
-    "UC1DCedRgGHBdm81E1llLhOQ": "gen3",
-    "UCL_qhgtOy0dy1Agp8vkySQg": "myth",
-    "UCvInZx9h3jC2JzsIzoOebWg": "gen3",
-    "UCDqI2jOz0weumE8s7paEk6g": "3d",
-    "UCp6993wxpyDPHUpavwDFqgg": "3d",
-    "UCAWSyEs_Io8MtpY3m-zqILA": "gen5",
+    "UC1opHUrw8rvnsadT-iGp7Cg": "gen2",
     "UCvzGlP9oQwU--Y0r9id_jnA": "gen2",
-    "UCQ0UDLQCjY0rmuxCDE38FGg": "gen1",
+
+    "UCp-5t9SrOQwXMU7iIjQfARg": "gamers",
+    "UChAnqc_AY5_I3Px5dig3X1Q": "gamers",
+    "UCvaTdHTWBGv3MKj3KVqJVCw": "gamers",
+
+    "UCl_gCybOJRIgOXw6Qb4qJzQ": "gen3",
+    "UCCzUftO8KOVkV4wQG1vkUvg": "gen3",
+    "UCdyqAaZDKHXg4Ahi7VENThQ": "gen3",
+    "UC1DCedRgGHBdm81E1llLhOQ": "gen3",
+    "UCvInZx9h3jC2JzsIzoOebWg": "gen3",
+    
+    "UCa9Y57gfeY0Zro_noHRVrnw": "gen4",
+    "UCqm3BQLlJfvkTsX_hvm0UmA": "gen4",
+    "UCS9uQI-jC3DE0L4IpXyvr6w": "gen4",
+    "UCZlDXzGoo7d44bwdNObFacg": "gen4",
     "UC1uv2Oq6kNxgATlCiez59hw": "gen4",
+    
+    "UCK9V2B22uJYu3N7eR_BT9QA": "gen5",
+    "UCUKD-uaobj9jiqB-VXt71mA": "gen5",
+    "UCAWSyEs_Io8MtpY3m-zqILA": "gen5",
     "UCFKOVgVbGmX65RxO3EtH3iw": "gen5",
-    "UC5CwaMl1eIgY8h02uZw7u8A": "2d",
+
+    "UCENwRMx5Yh42zWpzURebzTw": "gen6",
+    "UCs9_O1tRPMQTHQ-N_L6FU2g": "gen6",
+    "UC6eWCld0KwmyHFbAqK3V-Rw": "gen6",
+    "UCIBY1ollUsauvVi4hW4cumw": "gen6",
+    "UC_vMYWcDjmfdpH6r4TTn1MQ": "gen6",
+    
+    
+    "UCyl1z3jo3XHR1riLFKG5UAg": "myth",
+    "UCoSrY_IQQVpmIRZ9Xf-y93g": "myth",
+    "UCHsx4Hqa-1ORjQTh9TYDhww": "myth",
+    "UCMwGHR0BTZuLsmjY_NT5Pwg": "myth",
+    "UCL_qhgtOy0dy1Agp8vkySQg": "myth",
+
+    "UC8rcEBzJSleTkf_-agPM20g": "projectHope",
+
+    "UCsUj0dszADCGbF3gNrQEuSQ": "council",
+    "UCO_aKKYxn4tvrqPjcTzZ6EQ": "council",
+    "UCgmPnx-EEeOrZSg5Tiw7ZRQ": "council",
+    "UCmbs8T6MWqUHP1tIQvSgKrg": "council",
+    "UC3n5uGu18FoCy23ggWWp8tA": "council",
+
+    "UCAoy6rzhSf4ydcYjJw3WoVg": "area15",
+    "UCOyYb1c43VlX9rc_lT6NKQw": "area15",
+    "UCP0BspO_AMEe3aQqqpo89Dg": "area15",
+    
     "UCYz_5n-uDuChHtLo7My1HnQ": "holoID2",
     "UC727SQYUvx5pDDGQpTICNWg": "holoID2",
+    "UChgTyjG-pdNvxxhdsXfHQ5Q": "holoID2",
+
+    "UCTvHWSfBZgtxE4sILOaurIQ": "holoID3",
+    "UCZLZ8Jjx_RN2CXloOmgTHVg": "holoID3",
+    "UCjLEmnpCNeisMxy134KPwWw": "holoID3",
+
     "UC6t3-_N8A6ME1JShZHHqOMw": "starsGen1",
     "UCZgOv3YDEs-ZnZWDYVwJdmA": "starsGen1",
     "UCKeAhJvy8zgXWbh9duVjIaQ": "starsGen1",
     "UC9mf_ZVpouoILRY9NUIaK-w": "starsGen1",
+
     "UCNVEsYbiZjH5QLmGeSgTSzg": "starsGen2",
     "UCGNI4MENvnsymYjKiZwv9eg": "starsGen2",
-    "UCANDOlYTJT7N5jlRC3zfzVA": "starsGen2"
+    "UCANDOlYTJT7N5jlRC3zfzVA": "starsGen2",
+
+    "UChSvpZYRPh0FvG4SJGSga3g": "starsGen3",
+    "UCwL7dgTxKo8Y4RFIKWaf8gA": "starsGen3",
+
+    "UCJFZiqLMntJufDCHc6bQixg": "official",
+    "UCotXwY6s8pWmuWd_snKYjhg": "official",
+    "UCfrWoRGlawPQDQxxeIDRP0Q": "official"
   }
 }
