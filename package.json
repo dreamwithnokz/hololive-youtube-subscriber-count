@@ -6,25 +6,31 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "vercel-build": "yum install libuuid-devel libmount-devel && cp /lib64/{libuuid,libmount,libblkid}.so.1 node_modules/canvas/build/Release/ && npm run build"
+    "lint": "next lint"
   },
   "dependencies": {
-    "bootstrap": "^4.5.3",
-    "canvas": "^2.6.1",
-    "chart.js": "^2.9.4",
-    "color-thief-node": "^1.0.3",
-    "next": "9.5.5",
-    "next-pwa": "^5.0.3",
-    "react": "17.0.1",
-    "react-bootstrap": "^1.4.0",
-    "react-chartjs-2": "^2.10.0",
-    "react-dom": "17.0.1",
-    "react-intl": "^5.8.6",
+    "@types/node": "18.15.11",
+    "@types/react": "18.0.31",
+    "@types/react-dom": "18.0.11",
+    "bootstrap": "^5.2.3",
+    "chart.js": "^4.2.1",
+    "color-thief-node": "^1.0.4",
+    "eslint": "8.37.0",
+    "eslint-config-next": "13.2.4",
+    "next": "13.2.4",
+    "react": "18.2.0",
+    "react-bootstrap": "^2.7.2",
+    "react-chartjs-2": "^5.2.0",
+    "react-dom": "18.2.0",
+    "react-intl": "^6.3.2",
     "react-loading": "^2.0.3",
-    "sass": "^1.28.0",
-    "styled-components": "^5.2.1"
+    "styled-components": "^5.3.9",
+    "typescript": "5.0.2"
+  },
+  "overrides": {
+    "typescript": "$typescript"
   },
   "devDependencies": {
-    "babel-plugin-styled-components": "^1.11.1"
+    "sass": "^1.60.0"
   }
 }

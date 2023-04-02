@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
 const Alert = styled.div`
   background-color: #1b1718;
@@ -10,11 +10,11 @@ const Alert = styled.div`
   margin: 1em 0;
   padding: 0.75em 1em;
   width: 100%;
-`;
+`
 
 export default class CustomAlert extends React.Component {
   render () {
-    const { message, visible } = this.props;
-    return (visible) ? <Alert>{message}</Alert> : null;
+    const { message, visible } = this.props
+    return (visible) ? <Alert>{message}</Alert> : null
   }
 }

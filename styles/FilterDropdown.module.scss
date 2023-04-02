@@ -3,7 +3,9 @@
 @import "../node_modules/bootstrap/scss/mixins";
 
 .label {
-  color: #a7a7a7;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
 }
 
 .sortSelection {
@@ -15,6 +17,5 @@
 }
 
 .sortSelection option {
-  background-color: #18191a;
-  color: $white;
+  color: black;
 }
