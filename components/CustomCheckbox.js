@@ -1,5 +1,5 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from 'react'
+import styled from 'styled-components'
 
 const CheckboxContainer = styled.div`
   display: inline-block;
@@ -44,7 +44,7 @@ const StyledCheckbox = styled.div`
 
 const Label = styled.span`
   color: #dedede;
-  margin-left: 0.5em;
+  margin-left: 0.2em;
   font-size: 0.9em;
   user-select: none;
 `
@@ -54,23 +54,23 @@ const Checkbox = ({ className, checked, ...props }) => (
     <HiddenCheckbox checked={checked} {...props} />
     <StyledCheckbox checked={checked}>
       <Icon viewBox="0 0 24 24">
-        <polyline points="20 6 9 17 4 12" />
+        <polyline points="19 3 9 15 4 10" />
       </Icon>
     </StyledCheckbox>
   </CheckboxContainer>
-);
+)
 
 export default class CustomCheckbox extends React.Component {
   handleCheckboxChange = (event) => {
-    const { onCheckChange, name } = this.props;
+    const { onCheckChange, name } = this.props
     if (typeof onCheckChange != 'undefined') {
-      onCheckChange(name, event.target.checked);
+      onCheckChange(name, event.target.checked)
     }
   }
 
   render () {
     return (
-      <span className="mr-4">
+      <span className="me-2">
         <label>
           <Checkbox checked={this.props.checked} onChange={this.handleCheckboxChange}/>
           <Label>{this.props.label}</Label>
