@@ -208,7 +208,7 @@ export default class Index extends React.Component {
                 Hololive YouTube Subscriber Count
               </h3>
               <p className="text-secondary text-center mb-4">
-                Based on the Members' Verified YouTube Channel
+                Based on the Members&apos; Verified YouTube Channel
               </p>
             </Col>
           </Row>
