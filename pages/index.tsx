@@ -1,7 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
 import { Container, Row, Col } from 'react-bootstrap'
-import { getColor } from 'color-thief-node'
 
 import CustomAlert from '../components/CustomAlert.js'
 import FilterControl from '../components/FilterControl.js'
@@ -90,7 +89,6 @@ export default class Index extends React.Component {
 
         img.onload = function () {
           URL.revokeObjectURL(url)
-          item.color = rgbToHex(getColor(this, 16))
           loadingImageCount--
           if (loadingImageCount == 0) {
             component.handleDataInitialize(channelData)
