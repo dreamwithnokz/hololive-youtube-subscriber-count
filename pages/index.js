@@ -1,7 +1,6 @@
 import React from 'react'
 import Head from 'next/head'
 import { Container, Row, Col } from 'react-bootstrap'
-import { getColor } from 'color-thief-node'
 
 import CustomAlert from '../components/CustomAlert.js'
 import FilterControl from '../components/FilterControl.js'
@@ -90,7 +89,6 @@ export default class Index extends React.Component {
 
         img.onload = function () {
           URL.revokeObjectURL(url)
-          item.color = rgbToHex(getColor(this, 16))
           loadingImageCount--
           if (loadingImageCount == 0) {
             component.handleDataInitialize(channelData)
@@ -210,7 +208,7 @@ export default class Index extends React.Component {
                 Hololive YouTube Subscriber Count
               </h3>
               <p className="text-secondary text-center mb-4">
-                Based on the Members' Verified YouTube Channel
+                Based on the Members&apos; Verified YouTube Channel
               </p>
             </Col>
           </Row>
